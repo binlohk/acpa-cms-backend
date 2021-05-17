@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quizzes",
+  "info": {
+    "name": "quiz"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "quiz_content": {
+      "type": "json"
+    },
+    "course_progress": {
+      "via": "quiz",
+      "model": "category"
+    }
+  }
+}
