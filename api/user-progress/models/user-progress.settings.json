@@ -22,9 +22,9 @@
       "required": true
     },
     "users_permissions_user": {
+      "via": "user_progresses",
       "plugin": "users-permissions",
-      "model": "user",
-      "via": "user_progresses"
+      "model": "user"
     }
   }
 }

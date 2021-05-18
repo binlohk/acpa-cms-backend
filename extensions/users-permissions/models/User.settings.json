@@ -70,10 +70,12 @@
       "required": true
     },
     "user_referrers": {
+      "private": true,
       "via": "referrer",
       "collection": "user-referral"
     },
     "user_referrees": {
+      "private": true,
       "via": "referree",
       "collection": "user-referral"
     },
