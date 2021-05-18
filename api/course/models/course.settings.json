@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "courses",
+  "info": {
+    "name": "course",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "course_modules": {
+      "private": true,
+      "collection": "course-module"
+    },
+    "course_materials": {
+      "private": true,
+      "collection": "course-material"
+    },
+    "users": {
+      "via": "courses",
+      "plugin": "users-permissions",
+      "collection": "user"
+    },
+    "course_module": {
+      "via": "course",
+      "model": "course-module"
+    },
+    "course_material": {
+      "via": "course",
+      "model": "course-material"
+    }
+  }
+}

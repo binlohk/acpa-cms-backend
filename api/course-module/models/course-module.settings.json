@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "course_materials",
+  "collectionName": "course_modules",
   "info": {
-    "name": "course_material",
+    "name": "course_module",
     "description": ""
   },
   "options": {
@@ -12,21 +12,22 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "description": {
-      "type": "text",
-      "required": false
-    },
     "title": {
       "type": "string",
       "required": true
     },
-    "url": {
-      "type": "string",
-      "required": true
+    "description": {
+      "type": "richtext"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "quiz": {
+      "type": "json"
     },
     "course": {
       "model": "course",
-      "via": "course_material"
+      "via": "course_module"
     }
   }
 }

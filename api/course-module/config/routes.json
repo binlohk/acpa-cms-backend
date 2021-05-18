@@ -2,48 +2,48 @@
   "routes": [
     {
       "method": "GET",
-      "path": "/quizzes",
-      "handler": "quiz.find",
+      "path": "/course-modules",
+      "handler": "course-module.find",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/quizzes/count",
-      "handler": "quiz.count",
+      "path": "/course-modules/count",
+      "handler": "course-module.count",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/quizzes/:id",
-      "handler": "quiz.findOne",
+      "path": "/course-modules/:id",
+      "handler": "course-module.findOne",
       "config": {
         "policies": []
       }
     },
     {
       "method": "POST",
-      "path": "/quizzes",
-      "handler": "quiz.create",
+      "path": "/course-modules",
+      "handler": "course-module.create",
       "config": {
         "policies": []
       }
     },
     {
       "method": "PUT",
-      "path": "/quizzes/:id",
-      "handler": "quiz.update",
+      "path": "/course-modules/:id",
+      "handler": "course-module.update",
       "config": {
         "policies": []
       }
     },
     {
       "method": "DELETE",
-      "path": "/quizzes/:id",
-      "handler": "quiz.delete",
+      "path": "/course-modules/:id",
+      "handler": "course-module.delete",
       "config": {
         "policies": []
       }
