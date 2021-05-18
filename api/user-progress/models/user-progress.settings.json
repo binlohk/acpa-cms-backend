@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_progresses",
+  "info": {
+    "name": "user progress",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lessons": {
+      "collection": "lesson",
+      "via": "user_progresses",
+      "dominant": true
+    },
+    "finished": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_referrals",
+  "info": {
+    "name": "user referral"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "referrers": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "user_referrals",
+      "dominant": true
+    },
+    "referrees": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "user_referrals",
+      "dominant": true
+    }
+  }
+}

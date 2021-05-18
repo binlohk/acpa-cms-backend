@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/user-referrals",
+      "handler": "user-referral.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-referrals/count",
+      "handler": "user-referral.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-referrals/:id",
+      "handler": "user-referral.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user-referrals",
+      "handler": "user-referral.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/user-referrals/:id",
+      "handler": "user-referral.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/user-referrals/:id",
+      "handler": "user-referral.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

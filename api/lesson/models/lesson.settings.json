@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "course_modules",
+  "collectionName": "lessons",
   "info": {
-    "name": "course_module",
+    "name": "lesson",
     "description": ""
   },
   "options": {
@@ -16,18 +16,16 @@
       "type": "string",
       "required": true
     },
-    "description": {
+    "videoUrl": {
+      "type": "string",
+      "required": false
+    },
+    "lessonDescription": {
       "type": "richtext"
     },
-    "video_url": {
-      "type": "string"
-    },
-    "quiz": {
-      "type": "json"
-    },
-    "course": {
-      "model": "course",
-      "via": "course_module"
+    "user_progresses": {
+      "via": "lessons",
+      "collection": "user-progress"
     }
   }
 }

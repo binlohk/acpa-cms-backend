@@ -2,48 +2,48 @@
   "routes": [
     {
       "method": "GET",
-      "path": "/course-modules",
-      "handler": "course-module.find",
+      "path": "/user-progresses",
+      "handler": "user-progress.find",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/course-modules/count",
-      "handler": "course-module.count",
+      "path": "/user-progresses/count",
+      "handler": "user-progress.count",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/course-modules/:id",
-      "handler": "course-module.findOne",
+      "path": "/user-progresses/:id",
+      "handler": "user-progress.findOne",
       "config": {
         "policies": []
       }
     },
     {
       "method": "POST",
-      "path": "/course-modules",
-      "handler": "course-module.create",
+      "path": "/user-progresses",
+      "handler": "user-progress.create",
       "config": {
         "policies": []
       }
     },
     {
       "method": "PUT",
-      "path": "/course-modules/:id",
-      "handler": "course-module.update",
+      "path": "/user-progresses/:id",
+      "handler": "user-progress.update",
       "config": {
         "policies": []
       }
     },
     {
       "method": "DELETE",
-      "path": "/course-modules/:id",
-      "handler": "course-module.delete",
+      "path": "/user-progresses/:id",
+      "handler": "user-progress.delete",
       "config": {
         "policies": []
       }

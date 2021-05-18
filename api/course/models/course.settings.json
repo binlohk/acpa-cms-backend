@@ -25,26 +25,16 @@
       "required": true,
       "default": 0
     },
-    "course_modules": {
-      "private": true,
-      "collection": "course-module"
-    },
-    "course_materials": {
-      "private": true,
-      "collection": "course-material"
-    },
     "users": {
       "via": "courses",
       "plugin": "users-permissions",
       "collection": "user"
     },
-    "course_module": {
-      "via": "course",
-      "model": "course-module"
+    "course_materials": {
+      "collection": "course-material"
     },
-    "course_material": {
-      "via": "course",
-      "model": "course-material"
+    "lessons": {
+      "collection": "lesson"
     }
   }
 }

@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "course_materials",
   "info": {
-    "name": "course_material",
+    "name": "course material",
     "description": ""
   },
   "options": {
@@ -12,21 +12,24 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "description": {
-      "type": "text",
-      "required": false
-    },
     "title": {
       "type": "string",
       "required": true
     },
-    "url": {
-      "type": "string",
-      "required": true
+    "material": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
     },
-    "course": {
-      "model": "course",
-      "via": "course_material"
+    "materialDescription": {
+      "type": "string"
     }
   }
 }

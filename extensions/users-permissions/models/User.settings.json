@@ -63,6 +63,18 @@
       "via": "users",
       "collection": "course",
       "dominant": true
+    },
+    "point": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "user_progresses": {
+      "collection": "user-progress"
+    },
+    "user_referrals": {
+      "via": "referrees",
+      "collection": "user-referral"
     }
   }
 }

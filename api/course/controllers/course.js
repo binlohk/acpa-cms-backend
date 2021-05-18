@@ -7,14 +7,14 @@ const { sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
-    async find(ctx) {
-        console.log(ctx.state);
-        let entities;
-        if (ctx.query._q) {
-          entities = await strapi.services.course.search(ctx.query);
-        } else {
-          entities = await strapi.services.course.find(ctx.query);
-        }
-        return entities.map(entity => sanitizeEntity(entity, { model: strapi.models.course }));
-    },
+    // async find(ctx) {
+    //     console.log(ctx.state);
+    //     let entities;
+    //     if (ctx.query._q) {
+    //       entities = await strapi.services.course.search(ctx.query);
+    //     } else {
+    //       entities = await strapi.services.course.find(ctx.query);
+    //     }
+    //     return entities.map(entity => sanitizeEntity(entity, { model: strapi.models.course }));
+    // },
 };
