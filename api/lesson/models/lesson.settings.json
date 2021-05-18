@@ -26,6 +26,10 @@
     "user_progresses": {
       "via": "lesson",
       "collection": "user-progress"
+    },
+    "course": {
+      "model": "course",
+      "via": "lessons"
     }
   }
 }

@@ -5,7 +5,7 @@
       "path": "/lessons",
       "handler": "lesson.find",
       "config": {
-        "policies": []
+        "policies": ["isCourseOwner"]
       }
     },
     {
