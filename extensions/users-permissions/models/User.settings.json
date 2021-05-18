@@ -67,7 +67,7 @@
     "point": {
       "type": "integer",
       "default": 0,
-      "required": true
+      "required": false
     },
     "user_referrers": {
       "private": true,
