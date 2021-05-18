@@ -2,26 +2,25 @@
   "kind": "collectionType",
   "collectionName": "user_referrals",
   "info": {
-    "name": "user referral"
+    "name": "user referral",
+    "description": ""
   },
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "referrers": {
+    "referrer": {
+      "via": "user_referrers",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "user_referrals",
-      "dominant": true
+      "model": "user"
     },
-    "referrees": {
+    "referree": {
+      "via": "user_referrees",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "user_referrals",
-      "dominant": true
+      "model": "user"
     }
   }
 }

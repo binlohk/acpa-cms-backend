@@ -12,15 +12,19 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "lessons": {
-      "collection": "lesson",
-      "via": "user_progresses",
-      "dominant": true
+    "lesson": {
+      "model": "lesson",
+      "via": "user_progresses"
     },
     "finished": {
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "users_permissions_user": {
+      "plugin": "users-permissions",
+      "model": "user",
+      "via": "user_progresses"
     }
   }
 }

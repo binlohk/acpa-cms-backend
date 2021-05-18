@@ -24,7 +24,7 @@
       "type": "richtext"
     },
     "user_progresses": {
-      "via": "lessons",
+      "via": "lesson",
       "collection": "user-progress"
     }
   }

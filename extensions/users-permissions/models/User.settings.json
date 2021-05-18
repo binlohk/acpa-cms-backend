@@ -69,12 +69,17 @@
       "default": 0,
       "required": true
     },
-    "user_progresses": {
-      "collection": "user-progress"
-    },
-    "user_referrals": {
-      "via": "referrees",
+    "user_referrers": {
+      "via": "referrer",
       "collection": "user-referral"
+    },
+    "user_referrees": {
+      "via": "referree",
+      "collection": "user-referral"
+    },
+    "user_progresses": {
+      "via": "users_permissions_user",
+      "collection": "user-progress"
     }
   }
 }
