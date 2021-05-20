@@ -16,11 +16,6 @@
       "via": "user_progresses",
       "model": "lesson"
     },
-    "finished": {
-      "type": "boolean",
-      "default": false,
-      "required": true
-    },
     "users_permissions_user": {
       "via": "user_progresses",
       "plugin": "users-permissions",

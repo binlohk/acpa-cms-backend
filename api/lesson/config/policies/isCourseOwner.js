@@ -1,11 +1,13 @@
 module.exports = async (ctx, next) => {
-
-    // if (ctx.state.user.role.name === 'Administrator') {
-    //   // Go to next policy or will reach the controller's action.
-    //   return await next();
-    // }
-  
-    // ctx.unauthorized(`You're not allowed to perform this action!`);
-    console.log(ctx);
-    return await next();
+    const { id } = ctx.params;
+    const targetLesson = await strapi.services.lesson.findOne({ id });
+    const targetCourseId = targetLesson.course.id;
+    const user = await strapi.query('user', 'users-permissions').findOne({id: ctx.state.user.id});
+    const userCourses = user.courses;
+    const ifUserOwnTargetCourse = userCourses.filter(course=>{return (course.id == targetCourseId)});
+    if (ifUserOwnTargetCourse.length==1){
+        return await next();
+    } else {
+        ctx.unauthorized(`You haven't purchased the course yet.`);
+    }
   };
