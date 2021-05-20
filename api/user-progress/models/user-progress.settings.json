@@ -13,8 +13,8 @@
   "pluginOptions": {},
   "attributes": {
     "lesson": {
-      "model": "lesson",
-      "via": "user_progresses"
+      "via": "user_progresses",
+      "model": "lesson"
     },
     "finished": {
       "type": "boolean",
