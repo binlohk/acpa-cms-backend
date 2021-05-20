@@ -10,6 +10,22 @@
     },
     {
       "method": "GET",
+      "path": "/courses/findUnpublished",
+      "handler": "course.findUnpublished",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses/findUnpublished/:id",
+      "handler": "course.findOneUnpublished",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/courses/count",
       "handler": "course.count",
       "config": {
