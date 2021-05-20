@@ -5,7 +5,7 @@
       "path": "/lessons",
       "handler": "lesson.find",
       "config": {
-        "policies": ["isCourseOwner"]
+        "policies": []
       }
     },
     {
@@ -21,7 +21,7 @@
       "path": "/lessons/:id",
       "handler": "lesson.findOne",
       "config": {
-        "policies": []
+        "policies": ["isCourseOwner"]
       }
     },
     {
