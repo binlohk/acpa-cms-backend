@@ -11,16 +11,5 @@
     "draftAndPublish": false
   },
   "pluginOptions": {},
-  "attributes": {
-    "referrer": {
-      "via": "user_referrers",
-      "plugin": "users-permissions",
-      "model": "user"
-    },
-    "referree": {
-      "via": "user_referrees",
-      "plugin": "users-permissions",
-      "model": "user"
-    }
-  }
+  "attributes": {}
 }

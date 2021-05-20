@@ -45,4 +45,14 @@ module.exports = {
         } 
         return customizedEntity;
     },
+    async findUnpublished(ctx){
+        let result = await strapi.query('course').find();
+        const customizedEntities = result.map(entity => customizeEntityValue(entity));
+        return customizedEntities;
+    },
+    async findOneUnpublished(ctx){
+        const { id } = ctx.params;
+        let result = await strapi.query('course').findOne({id});
+        return customizeEntityValue(result);
+    },
 };
