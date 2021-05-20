@@ -18,9 +18,16 @@ module.exports = {
                 throw(boomError);
             }
         },
-        beforeUpdate(param, data){
-            if(!data.course){
-                throw(boomError);
+        async beforeUpdate(param, data){
+            if('course' in data){
+                if(!data.course){
+                    throw(boomError);
+                }
+            } else {
+                let result = await strapi.query('lesson').findOne({id: param.id});
+                if(!result.course){
+                    throw(boomError);
+                }
             }
         },
       },
