@@ -7,17 +7,29 @@ const { sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
-    // async find(ctx) {
-    //     // console.log(ctx.state);
-    //     let entities;
-    //     if (ctx.query._q) {
-    //       entities = await strapi.services.course.search(ctx.query);
-    //     } else {
-    //       entities = await strapi.services.course.find(ctx.query);
-    //     }
-    //     console.log(entities);
-    //     return entities.map(entity => { 
-    //         return {...sanitizeEntity(entity, { model: strapi.models.course })}
-    //     });
-    // },
+    async find(ctx) {
+        let entities;
+        if (ctx.query._q) {
+          entities = await strapi.services.course.search(ctx.query);
+        } else {
+          entities = await strapi.services.course.find(ctx.query);
+        }
+
+        return entities.map(entity => { 
+            return {
+                lessonsDetail: entity.lessons.map(lesson=>{return {title: lesson.title, text: lesson.lessonDescription}}), 
+                courseMaterials: entity.course_materials.map(material=>{ return {title: material.title}}),
+                ...sanitizeEntity(entity, { model: strapi.models.course })};
+        });
+    },
+    async findOne(ctx) {
+        const { id } = ctx.params;
+        const entity = await strapi.services.course.findOne({ id });
+        const entityWithoutPrivateField = sanitizeEntity(entity, { model: strapi.models.course });
+        return {
+            lessonsDetail: entity.lessons.map(lesson=>{return {title: lesson.title, text: lesson.lessonDescription}}), 
+            courseMaterials: entity.course_materials.map(material=>{ return {title: material.title}}),
+            ...entityWithoutPrivateField
+        };
+    },
 };
