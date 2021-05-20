@@ -28,8 +28,8 @@
       "collection": "user-progress"
     },
     "course": {
-      "model": "course",
-      "via": "lessons"
+      "via": "lessons",
+      "model": "course"
     }
   }
 }
