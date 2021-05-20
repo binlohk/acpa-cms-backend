@@ -17,8 +17,8 @@ module.exports = {
 
         return entities.map(entity => { 
             return {
-                lessonsDetail: entity.lessons.map(lesson=>{return {title: lesson.title, text: lesson.lessonDescription}}), 
-                courseMaterials: entity.course_materials.map(material=>{ return {title: material.title}}),
+                lessonsDetail: entity.lessons.map(lesson=>{return { id: lesson.id, title: lesson.title, text: lesson.lessonDescription}}), 
+                courseMaterials: entity.course_materials.map(material=>{ return { id: material.id, title: material.title}}),
                 ...sanitizeEntity(entity, { model: strapi.models.course })};
         });
     },
@@ -27,8 +27,8 @@ module.exports = {
         const entity = await strapi.services.course.findOne({ id });
         const entityWithoutPrivateField = sanitizeEntity(entity, { model: strapi.models.course });
         return {
-            lessonsDetail: entity.lessons.map(lesson=>{return {title: lesson.title, text: lesson.lessonDescription}}), 
-            courseMaterials: entity.course_materials.map(material=>{ return {title: material.title}}),
+            lessonsDetail: entity.lessons.map(lesson=>{return { id: lesson.id, title: lesson.title, text: lesson.lessonDescription}}), 
+            courseMaterials: entity.course_materials.map(material=>{ return { id: material.id, title: material.title }}),
             ...entityWithoutPrivateField
         };
     },
