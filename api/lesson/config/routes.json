@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/lessons/findUnpublished/:id",
+      "handler": "lesson.findOneUnpublished",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/lessons",
       "handler": "lesson.create",
