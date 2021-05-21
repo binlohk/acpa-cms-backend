@@ -1,0 +1,12 @@
+{
+    "routes": [
+        {
+            "method": "POST",
+            "path": "/refreshToken",
+            "handler": "auth.refreshToken",
+            "config": {
+              "policies": []
+            }
+          }
+    ]
+} 
