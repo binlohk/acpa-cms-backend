@@ -11,5 +11,17 @@
     "draftAndPublish": false
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "referral_referrer": {
+      "via": "user_referrers",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "referral_referree": {
+      "unique": true,
+      "via": "user_referrees",
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
 }
