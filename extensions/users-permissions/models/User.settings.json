@@ -73,15 +73,13 @@
       "via": "users_permissions_user",
       "collection": "user-progress"
     },
-    "referrer": {
-      "plugin": "users-permissions",
-      "model": "user",
-      "via": "referees"
+    "user_referrers": {
+      "via": "referral_referrer",
+      "collection": "user-referral"
     },
-    "referees": {
-      "plugin": "users-permissions",
-      "collection": "user",
-      "via": "referrer"
+    "user_referrees": {
+      "via": "referral_referree",
+      "collection": "user-referral"
     }
   }
 }
