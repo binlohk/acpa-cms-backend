@@ -11,6 +11,7 @@ const customizeEntityValue = (entity) => {
     return {
         lessonsDetail: entity.lessons.map(lesson=>{return { id: lesson.id, title: lesson.title, text: lesson.lessonDescription, finished: false }}), 
         courseMaterials: entity.course_materials.map(material=>{ return { id: material.id, title: material.title }}),
+        purchased: false,
         ...entityWithoutPrivateField
     };
 }
@@ -25,6 +26,15 @@ const checkIfUserFinishedLesson = async ( entity, userId ) => {
     }
 }
 
+const checkIfUserPurchasedCourse = async (entity, userId) => {
+    const user = await strapi.query('user', 'users-permissions').findOne({id: userId});
+    const userCourses = user.courses;
+    const ifUserOwnTargetCourse = userCourses.filter(course=>{return (course.id == entity.id)});
+    if(ifUserOwnTargetCourse.length > 0){
+        entity.purchased = true;
+    };
+}
+
 module.exports = {
     async find(ctx) {
         let entities = await strapi.services.course.find(ctx.query);
@@ -32,6 +42,7 @@ module.exports = {
         if(ctx.state.user){
             for(let customizedEntity of customizedEntities){
                 await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
+                await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
             }
         } 
         return customizedEntities;
@@ -42,6 +53,7 @@ module.exports = {
         const customizedEntity = customizeEntityValue(entity)
         if(ctx.state.user){
             await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
+            await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
         } 
         return customizedEntity;
     },
