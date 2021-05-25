@@ -7,6 +7,17 @@ const { sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
+
+    /**
+   * Count records.
+   *
+   * @return {Number}
+   */
+
+  count(ctx) {
+    return strapi.services['user-progress'].count(ctx.request.body);
+  },
+
  /**
    * Create a record.
    *
