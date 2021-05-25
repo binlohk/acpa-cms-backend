@@ -10,10 +10,10 @@
     },
     {
       "method": "GET",
-      "path": "/user-progresses/count",
+      "path": "/user-progresses/:lessonId/:userId",
       "handler": "user-progress.count",
       "config": {
-        "policies": []
+        "policies": ["hasAllRequiredFields", "checkIsSameUser", "isCourseOwner"]
       }
     },
     {
@@ -26,10 +26,10 @@
     },
     {
       "method": "POST",
-      "path": "/user-progresses",
+      "path": "/user-progresses/:lessonId/:userId",
       "handler": "user-progress.create",
       "config": {
-        "policies": []
+        "policies": ["hasAllRequiredFields", "checkIsSameUser", "isCourseOwner"]
       }
     },
     {
@@ -42,10 +42,10 @@
     },
     {
       "method": "DELETE",
-      "path": "/user-progresses/:id",
+      "path": "/user-progresses/:lessonId/:userId",
       "handler": "user-progress.delete",
       "config": {
-        "policies": []
+        "policies": ["hasAllRequiredFields", "checkIsSameUser", "isCourseOwner"]
       }
     }
   ]
