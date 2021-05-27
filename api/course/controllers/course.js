@@ -10,7 +10,7 @@ const customizeEntityValue = (entity) => {
     const entityWithoutPrivateField = sanitizeEntity(entity, { model: strapi.models.course });
     return {
         lessonsDetail: entity.lessons.map(lesson=>{return { id: lesson.id, title: lesson.title, text: lesson.lessonDescription, finished: false }}), 
-        courseMaterials: entity.course_materials.map(material=>{ return { id: material.id, title: material.title }}),
+        courseMaterials: entity.course_materials,
         purchased: false,
         ...entityWithoutPrivateField
     };
