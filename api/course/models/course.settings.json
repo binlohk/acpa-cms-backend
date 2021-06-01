@@ -26,9 +26,9 @@
       "default": 0
     },
     "users": {
-      "private": true,
       "via": "courses",
       "plugin": "users-permissions",
+      "private": true,
       "collection": "user"
     },
     "course_materials": {
@@ -53,6 +53,16 @@
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
+    },
+    "user_payments": {
+      "via": "course",
+      "private": true,
+      "collection": "user-payment"
+    },
+    "stripePriceKey": {
+      "type": "string",
+      "unique": true,
+      "private": false
     }
   }
 }
