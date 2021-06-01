@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/user-payments",
+      "handler": "user-payment.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-payments/count",
+      "handler": "user-payment.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/user-payments/:id",
+      "handler": "user-payment.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user-payments",
+      "handler": "user-payment.create",
+      "config": {
+        "policies": ["createStripeCustomer"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/user-payments/confirm",
+      "handler": "user-payment.handleAsyncEvents",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/user-payments/:id",
+      "handler": "user-payment.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/user-payments/:id",
+      "handler": "user-payment.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
