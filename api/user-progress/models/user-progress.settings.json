@@ -18,9 +18,9 @@
       "model": "lesson"
     },
     "users_permissions_user": {
-      "private": true,
       "via": "user_progresses",
       "plugin": "users-permissions",
+      "private": true,
       "model": "user"
     }
   }

@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_payments",
+  "info": {
+    "name": "User Payment",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sessionID": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "course": {
+      "via": "user_payments",
+      "model": "course"
+    },
+    "user": {
+      "via": "user_payments",
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "paid": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}
