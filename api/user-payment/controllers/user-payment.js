@@ -2,8 +2,7 @@
 
 const { sanitizeEntity } = require('strapi-utils');
 const stripe = require('stripe')(process.env.STRIPE_SK);
-const { unparsed } = require("koa-body");
-
+const unparsed = Symbol.for('unparsedBody');
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -48,20 +47,12 @@ module.exports = {
       }
   },
 
-//   async confirm(ctx) {
-//       const { checkout_session } = ctx.request.body;
-
-//       const session = await stripe.checkout.sessions.retrieve(checkout_session);
-//       console.log(session)
-
-//   }
-
   /**
    * Update a record.
    *
    * @return {Object}
    */
-    async handleAsyncEvents (ctx) {
+async handleAsyncEvents (ctx) {
     let data;
     let eventType;
     // Check if webhook signing is configured.
@@ -70,26 +61,26 @@ module.exports = {
         let event;
         const unparsedBody = ctx.request.body[unparsed];
         let signature = ctx.request.headers["stripe-signature"];
-        console.log("signature: ", signature)
         try {
-            console.log("ctx.request: ", unparsedBody)
             event = stripe.webhooks.constructEvent(
                 unparsedBody,
                 signature,
                 process.env.STRIPE_WEBHOOK_SECRET
             );
+
         } catch (err) {
             console.log(err);
             return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
         }
+
         // Extract the object from the event.
         data = event.data;
         eventType = event.type;
+
     } else {
         // Webhook signing is recommended, but if the secret is not configured in `config.js`,
         // retrieve the event data directly from the request body.
-        data = req.body.data;
-        eventType = req.body.type;
+        return ctx.badRequest(`⚠️  Webhook signature is not passed.`);
     }
 
     if (eventType === "checkout.session.completed") {
@@ -108,8 +99,9 @@ module.exports = {
             console.log(e)
             return ctx.badRequest(`⚠️  Update user payment record failed.`);
         }
+    } else {
+        return ctx.badRequest(`⚠️  The payment status is not succeeded.`);
     }
-    return sanitizeEntity(entity, { model: strapi.models['user-payment']});
 },
 
 };
