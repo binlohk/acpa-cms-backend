@@ -18,7 +18,6 @@
       "model": "user"
     },
     "referral_referree": {
-      "unique": true,
       "via": "user_referrees",
       "plugin": "users-permissions",
       "model": "user"

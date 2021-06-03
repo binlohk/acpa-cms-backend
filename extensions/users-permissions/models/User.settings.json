@@ -80,6 +80,14 @@
     "user_referrees": {
       "via": "referral_referree",
       "collection": "user-referral"
+    },
+    "user_payments": {
+      "via": "user",
+      "collection": "user-payment"
+    },
+    "stripeCustomerKey": {
+      "type": "string",
+      "unique": true
     }
   }
 }
