@@ -88,6 +88,18 @@
     "stripeCustomerKey": {
       "type": "string",
       "unique": true
+    },
+    "Membership": {
+      "type": "enumeration",
+      "enum": [
+        "Gold",
+        "Silver",
+        "Bronze",
+        "Basic"
+      ],
+      "default": "Basic",
+      "required": true,
+      "private": false
     }
   }
 }
