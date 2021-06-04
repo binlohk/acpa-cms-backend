@@ -587,6 +587,16 @@ module.exports = {
           }
           
           await strapi.query('user-referral').create(userReferralData);
+          const referrerNewPoint = referrerData.point ? (referrerData.point + process.env.REFERRAL_POINT_EARNED) : process.env.REFERRAL_POINT_EARNED;
+          if(referrerNewPoint>process.env.GOLD_POINTS){
+            await userService.edit({ id: referrerData.id }, { Membership: 'Gold', point: referrerNewPoint });
+          } else if (referrerNewPoint>process.env.SILVER_POINTS) {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Silver', point: referrerNewPoint });
+          } else if (referrerNewPoint>process.env.BRONZE_POINTS){
+            await userService.edit({ id: referrerData.id }, { Membership: 'Bronze', point: referrerNewPoint });
+          } else {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Basic', point: referrerNewPoint });
+          }
         }
     } catch (error) {
       ctx.badRequest('referrer token invalid');
