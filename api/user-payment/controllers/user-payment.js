@@ -11,6 +11,12 @@ const unparsed = Symbol.for('unparsedBody');
 
 module.exports = {
 
+    async findOne(ctx) {
+        const { sessionID } = ctx.params;
+        const entity = await strapi.services['user-payment'].findOne({ sessionID });
+        return sanitizeEntity(entity, { model: strapi.models['user-payment']});
+    },
+
     /**
    * Create a record.
    *
@@ -26,8 +32,8 @@ module.exports = {
             ctx.badRequest('The course has no valid Stripe price key. Please contact support.');
         }
         const session = await stripe.checkout.sessions.create({
-            success_url: `${process.env.BASE_URL}/payment-success/${courseId}`,
-            cancel_url: `${process.env.BASE_URL}/payment-fail/${courseId}`,
+            success_url: `${process.env.BASE_URL}/payment-success/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/payment-fail/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
             payment_method_types: ['card'],
             line_items: [
                 { price: priceKey, quantity: 1 },
@@ -93,7 +99,6 @@ async handleAsyncEvents (ctx) {
             {
                 paid: true,
             });
-            console.log('entity: ', entity);
             const user = await strapi.query('user', 'users-permissions').findOne({id: entity.user.id});
             const userCourses = user.courses;
             userCourses.push({id: entity.course.id});
