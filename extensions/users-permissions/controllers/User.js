@@ -115,12 +115,16 @@ module.exports = {
    */
   async me(ctx) {
     const user = ctx.state.user;
-
     if (!user) {
       return ctx.badRequest(null, [{ messages: [{ id: 'No authorization header was found!' }] }]);
     }
     const token = strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['email']));
     user.referralToken = token;
+    
+    let { profilePicture } = await strapi.plugins['users-permissions'].services.user.fetch({
+      id: user.id,
+    });
+    user.profilePicture = profilePicture;
     ctx.body = sanitizeUser(user);
   },
 };
