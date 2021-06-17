@@ -95,7 +95,7 @@ module.exports = {
       const userWithSameEmail = await strapi
         .query('user', 'users-permissions')
         .findOne({ email: email.toLowerCase() });
-
+      console.log(userWithSameEmail, 'userWithSameEmail')
       if (userWithSameEmail) {
         return ctx.badRequest(
           null,

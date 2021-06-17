@@ -11,28 +11,28 @@ const crypto = require('crypto');
 const _ = require('lodash');
 const grant = require('grant-koa');
 const { sanitizeEntity } = require('strapi-utils');
+const { default: createStrapi } = require('strapi');
 
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const formatError = error => [
   { messages: [{ id: error.id, message: error.message, field: error.field }] },
 ];
 
-module.exports = {    
+module.exports = {
   async refreshToken(ctx) {
     const token = ctx.request.header.authorization.split('Bearer ')[1]
     try {
-        const payload = await strapi.plugins['users-permissions'].services.jwt.verify(token)
-        return strapi.plugins['users-permissions'].services.jwt.issue({
-            id: payload.id,
-        })
+      const payload = await strapi.plugins['users-permissions'].services.jwt.verify(token)
+      return strapi.plugins['users-permissions'].services.jwt.issue({
+        id: payload.id,
+      })
     } catch (e) {
-        console.log(e)
+      console.log(e)
     }
   },
   async callback(ctx) {
     const provider = ctx.params.provider || 'local';
     const params = ctx.request.body;
-
     const store = await strapi.store({
       environment: '',
       type: 'plugin',
@@ -190,20 +190,18 @@ module.exports = {
 
     if (
       params.password &&
-      params.passwordConfirmation &&
-      params.password === params.passwordConfirmation &&
       params.code
     ) {
       const user = await strapi
         .query('user', 'users-permissions')
         .findOne({ resetPasswordToken: `${params.code}` });
-
+      console.log(user, 'reset user')
       if (!user) {
         return ctx.badRequest(
           null,
           formatError({
             id: 'Auth.form.error.code.provide',
-            message: 'Incorrect code provided.',
+            message: '確認碼已經過期',
           })
         );
       }
@@ -225,26 +223,6 @@ module.exports = {
           model: strapi.query('user', 'users-permissions').model,
         }),
       });
-    } else if (
-      params.password &&
-      params.passwordConfirmation &&
-      params.password !== params.passwordConfirmation
-    ) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: 'Auth.form.error.password.matching',
-          message: 'Passwords do not match.',
-        })
-      );
-    } else {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: 'Auth.form.error.params.provide',
-          message: 'Incorrect params provided.',
-        })
-      );
     }
   },
 
@@ -297,29 +275,33 @@ module.exports = {
         })
       );
     }
+    // Find the user by email.
+
+    const user = await strapi
+      .query('user', 'users-permissions')
+      .findOne({ email: email.toLowerCase() });
+    console.log(user, 'user')
+    // User not found.
+    if (user) {
+      return { status: '200', message: 'ok' };
+    }
+
+    /**check if email is confirmed */
+    if (user && !user.confirmed) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.user.not-confirmed',
+          message: '此電郵並未確認',
+        })
+      );
+    }
 
     const pluginStore = await strapi.store({
       environment: '',
       type: 'plugin',
       name: 'users-permissions',
     });
-
-    // Find the user by email.
-    const user = await strapi
-      .query('user', 'users-permissions')
-      .findOne({ email: email.toLowerCase() });
-
-    // User not found.
-    if (!user) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: 'Auth.form.error.user.not-exist',
-          message: 'This email does not exist.',
-        })
-      );
-    }
-
     // Generate random token.
     const resetPasswordToken = crypto.randomBytes(64).toString('hex');
 
@@ -378,7 +360,7 @@ module.exports = {
     ctx.send({ ok: true });
   },
 
-  async register(ctx, referrerToken=null) {
+  async register(ctx, referrerToken = null) {
     const pluginStore = await strapi.store({
       environment: '',
       type: 'plugin',
@@ -388,7 +370,7 @@ module.exports = {
     const settings = await pluginStore.get({
       key: 'advanced',
     });
-
+    console.log(settings, 'settings')
     if (!settings.allow_register) {
       return ctx.badRequest(
         null,
@@ -524,35 +506,35 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, 'username')
         ? {
-            id: 'Auth.form.error.username.taken',
-            message: 'Username already taken',
-          }
+          id: 'Auth.form.error.username.taken',
+          message: 'Username already taken',
+        }
         : { id: 'Auth.form.error.email.taken', message: 'Email already taken' };
 
       ctx.badRequest(null, formatError(adminError));
     }
   },
 
-  async registerWithReferral(ctx){
+  async registerWithReferral(ctx) {
     try {
       const { referralToken } = ctx.params;
       const referrer = await strapi.plugins['users-permissions'].services.jwt.verify(referralToken);
       let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
         email: referrer.email,
       });
-      if(!referrerData){
+      if (!referrerData) {
         ctx.badRequest("The referrer token is invalid.");
       }
       await this.register(ctx, referralToken);
     } catch (error) {
       const adminError = _.includes(error.message, 'username')
-      ? {
+        ? {
           id: 'Auth.form.error.username.taken',
           message: 'Username already taken',
         }
-      : _.includes(error.message, 'token')
-      ? { id: 'Auth.form.error.invalid.token', message: error.message }
-      : { id: 'Auth.form.error.email.taken', message: 'Email already taken' };
+        : _.includes(error.message, 'token')
+          ? { id: 'Auth.form.error.invalid.token', message: error.message }
+          : { id: 'Auth.form.error.email.taken', message: 'Email already taken' };
 
       ctx.badRequest(null, formatError(adminError));
     }
@@ -576,35 +558,35 @@ module.exports = {
 
     //custom logic
     try {
-        if(referrerToken){
-          const referrer = await jwtService.verify(referrerToken);
-          let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
-            email: referrer.email,
-          });
-          const userReferralData = {
-            "referral_referrer": referrerData,
-            "referral_referree": user
-          }
-          
-          await strapi.query('user-referral').create(userReferralData);
-          let referrerNewPoint = parseInt(process.env.REFERRAL_POINT_EARNED);
-          if(parseInt(referrerData.point)>0){
-            referrerNewPoint = referrerNewPoint + parseInt(referrerData.point);
-          }
-          if(referrerNewPoint>process.env.GOLD_POINTS){
-            await userService.edit({ id: referrerData.id }, { Membership: 'Gold', point: referrerNewPoint });
-          } else if (referrerNewPoint>process.env.SILVER_POINTS) {
-            await userService.edit({ id: referrerData.id }, { Membership: 'Silver', point: referrerNewPoint });
-          } else if (referrerNewPoint>process.env.BRONZE_POINTS){
-            await userService.edit({ id: referrerData.id }, { Membership: 'Bronze', point: referrerNewPoint });
-          } else {
-            await userService.edit({ id: referrerData.id }, { Membership: 'Basic', point: referrerNewPoint });
-          }
+      if (referrerToken) {
+        const referrer = await jwtService.verify(referrerToken);
+        let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
+          email: referrer.email,
+        });
+        const userReferralData = {
+          "referral_referrer": referrerData,
+          "referral_referree": user
         }
+
+        await strapi.query('user-referral').create(userReferralData);
+        let referrerNewPoint = parseInt(process.env.REFERRAL_POINT_EARNED);
+        if (parseInt(referrerData.point) > 0) {
+          referrerNewPoint = referrerNewPoint + parseInt(referrerData.point);
+        }
+        if (referrerNewPoint > process.env.GOLD_POINTS) {
+          await userService.edit({ id: referrerData.id }, { Membership: 'Gold', point: referrerNewPoint });
+        } else if (referrerNewPoint > process.env.SILVER_POINTS) {
+          await userService.edit({ id: referrerData.id }, { Membership: 'Silver', point: referrerNewPoint });
+        } else if (referrerNewPoint > process.env.BRONZE_POINTS) {
+          await userService.edit({ id: referrerData.id }, { Membership: 'Bronze', point: referrerNewPoint });
+        } else {
+          await userService.edit({ id: referrerData.id }, { Membership: 'Basic', point: referrerNewPoint });
+        }
+      }
     } catch (error) {
       ctx.badRequest('referrer token invalid');
     }
-    
+
     if (returnUser) {
       ctx.send({
         jwt: jwtService.issue({ id: user.id }),
