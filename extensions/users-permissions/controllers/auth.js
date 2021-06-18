@@ -282,19 +282,8 @@ module.exports = {
       .findOne({ email: email.toLowerCase() });
     console.log(user, 'user')
     // User not found.
-    if (user) {
+    if (!user) {
       return { status: '200', message: 'ok' };
-    }
-
-    /**check if email is confirmed */
-    if (user && !user.confirmed) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: 'Auth.form.error.user.not-confirmed',
-          message: '此電郵並未確認',
-        })
-      );
     }
 
     const pluginStore = await strapi.store({
@@ -374,7 +363,7 @@ module.exports = {
     if (!settings.allow_register) {
       return ctx.badRequest(
         null,
-        formatError({
+        fopostmarmatError({
           id: 'Auth.advanced.allow_register',
           message: 'Register action is currently disabled.',
         })
