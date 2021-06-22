@@ -120,11 +120,12 @@ module.exports = {
     }
     const token = strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['email']));
     user.referralToken = token;
-    
+
     let { profilePicture } = await strapi.plugins['users-permissions'].services.user.fetch({
       id: user.id,
     });
     user.profilePicture = profilePicture;
     ctx.body = sanitizeUser(user);
   },
+
 };
