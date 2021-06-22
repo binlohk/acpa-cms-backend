@@ -93,14 +93,18 @@ const checkIfUserPurchasedCourse = async (entity, userId) => {
 module.exports = {
     async find(ctx) {
         let entities = await strapi.services.course.find(ctx.query);
-        const customizedEntities = await entities.map(entity => customizeEntityValue(entity));
-        if (ctx.state.user) {
-            for (let customizedEntity of customizedEntities) {
-                await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
-                await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
-            }
-        }
-        return customizedEntities;
+        const customizedEntities = entities.map(entity => customizeEntityValue(entity));
+        const result = await Promise.all(customizedEntities)
+            .then(async function (customizedEntities) {
+                if (ctx.state.user) {
+                    for (let customizedEntity of customizedEntities) {
+                        await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
+                        await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
+                    }
+                }
+                return customizedEntities;
+            })
+        return result
     },
     async findOne(ctx) {
         const { id } = ctx.params;
@@ -117,6 +121,7 @@ module.exports = {
     async findUnpublished(ctx) {
         let result = await strapi.query('course').find();
         const customizedEntities = result.map(entity => customizeEntityValue(entity));
+        console.log(customizedEntitie, 'customizedEntities')
         return customizedEntities;
     },
     async findOneUnpublished(ctx) {
