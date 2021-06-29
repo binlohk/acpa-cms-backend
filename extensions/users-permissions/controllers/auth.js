@@ -477,7 +477,7 @@ module.exports = {
 
       if (settings.email_confirmation) {
         try {
-          console.log('confirmation email sent')
+          console.log('confirmation email sent here')
           await strapi.plugins['users-permissions'].services.user.sendConfirmationEmail(user, referrerToken);
         } catch (err) {
           return ctx.badRequest(null, err);
