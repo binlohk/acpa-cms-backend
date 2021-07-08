@@ -633,21 +633,4 @@ module.exports = {
     }
   },
 
-  async checkReferrer(ctx) {
-    const { referrerToken } = ctx.params;
-    try {
-      const referrer = await strapi.plugins['users-permissions'].services.jwt.verify(referrerToken);
-      let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
-        email: referrer.email,
-      });
-      if (!referrerData) {
-        ctx.badRequest("The referrer token is invalid.");
-      }
-      ctx.send({
-        referrerData
-      })
-    } catch (err) {
-      return ctx.badRequest(null, err);
-    }
-  }
 };
