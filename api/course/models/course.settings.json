@@ -36,8 +36,8 @@
       "collection": "course-material"
     },
     "lessons": {
-      "private": true,
       "via": "course",
+      "private": true,
       "collection": "lesson"
     },
     "featured": {

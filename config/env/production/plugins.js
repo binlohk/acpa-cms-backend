@@ -4,12 +4,12 @@ module.exports = ({ env }) => ({
     provider: 'sendgrid',
     providerOptions: {
       // apiKey: env('SENDGRID_API_KEY'),
-      apiKey: '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',
+      apiKey: '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',
     },
     settings: {
-      defaultFrom: 'mark@binlo.io',
-      defaultReplyTo: 'mark@binlo.io',
-      testAddress: 'wongw859@gmail.com',
+      defaultFrom: 'kelvin@acpa.training',
+      defaultReplyTo: 'kelvin@acpa.training',
+      testAddress: 'winnie@binlo.io',
     },
 
   },

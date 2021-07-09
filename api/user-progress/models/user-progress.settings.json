@@ -13,8 +13,8 @@
   "pluginOptions": {},
   "attributes": {
     "lesson": {
-      "private": true,
       "via": "user_progresses",
+      "private": true,
       "model": "lesson"
     },
     "users_permissions_user": {

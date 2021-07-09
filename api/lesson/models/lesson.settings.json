@@ -18,7 +18,7 @@
     },
     "videoUrl": {
       "type": "string",
-      "required": false
+      "required": true
     },
     "lessonDescription": {
       "type": "richtext"
