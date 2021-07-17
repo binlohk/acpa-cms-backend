@@ -1,5 +1,5 @@
 module.exports = ({ env }) => ({
-  host: env('HOST', 'http://app.acpa.training'),
+  host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
   url: `http://app.acpa.training/api`,
   admin: {
