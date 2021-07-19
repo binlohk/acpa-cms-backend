@@ -1,0 +1,23 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.ACPA_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.ACPA_SSH_KNOWN_HOSTS }}
+
+      - name: Build and deploy
+        run: ./deploy-prod.sh
