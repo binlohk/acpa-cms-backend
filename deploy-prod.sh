@@ -25,6 +25,6 @@ git clean -fdx
 npm install
 npm run build
 
-rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acps-cms-backend
+rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
 ssh ubuntu@174.138.20.136 "bash -c 'source ~/.nvm/nvm.sh && nvm use 14 && pm2 restart /home/ubuntu/deploy-production/ecosystem.config.js'"
