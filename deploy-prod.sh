@@ -3,7 +3,7 @@
 # Exit on any error
 set -ex
 
-export NODE_ENV=production
+export NODE_ENV=development
 
 SCRIPT_SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
