@@ -23,7 +23,7 @@ git clean -fdx
 
 # Build it
 npm install
-npm run build
+NODE_ENV=production npm run build
 
 rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
