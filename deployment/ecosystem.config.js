@@ -6,10 +6,10 @@ module.exports = {
       script: 'npm',
       args: 'start',
       env: {
-	"NODE_ENV": "development",
+        "NODE_ENV": "production",
         "DATABASE_FILENAME": "/home/ubuntu/deploy-production/data/acpa-backend.db",
-	"STRAPI_URL": "http://app.acpa.training/api",
-	"STRAPI_ADMIN_URL": "http://app.acpa.training/api/admin",
+        "STRAPI_URL": "http://app.acpa.training/api",
+        "STRAPI_ADMIN_URL": "http://app.acpa.training/admin",
       },
     }
   ]
