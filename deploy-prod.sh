@@ -3,7 +3,7 @@
 # Exit on any error
 set -ex
 
-export NODE_ENV=development
+export NODE_ENV=production
 
 SCRIPT_SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -23,8 +23,14 @@ git clean -fdx
 
 # Build it
 npm install
-NODE_ENV=production npm run build
+npm run build
 
 rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
-ssh ubuntu@174.138.20.136 "pm2 restart /home/ubuntu/deploy-production/ecosystem.config.js"
+## Deploy nginx and pm2 config
+rsync -v --rsync-path="sudo rsync" --chown=root:root --chmod=0644 ./deployment/app.acpa.training ubuntu@174.138.20.136:/etc/nginx/sites-available/app.acpa.training
+rsync -v --rsync-path="sudo rsync" --chown=ubuntu:ubuntu --chmod=0644 ./deployment/ecosystem.config.js ubuntu@174.138.20.136:/home/ubuntu/deploy-production/ecosystem.config.js
+
+ssh ubuntu@174.138.20.136 "pm2 restart /home/ubuntu/deploy-production/ecosystem.config.js && sudo nginx -s reload"
+
+
