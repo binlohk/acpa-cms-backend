@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "latest_news",
   "info": {
-    "name": "Latest News"
+    "name": "Latest News",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -13,12 +14,12 @@
   "attributes": {
     "title": {
       "type": "string",
-      "maxLength": 30,
+      "maxLength": 40,
       "required": true
     },
     "description": {
       "type": "string",
-      "maxLength": 60,
+      "maxLength": 240,
       "required": true
     }
   }
