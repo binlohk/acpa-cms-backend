@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/latest-news",
+      "handler": "latest-news.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/latest-news/count",
+      "handler": "latest-news.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/latest-news/:id",
+      "handler": "latest-news.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/latest-news",
+      "handler": "latest-news.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/latest-news/:id",
+      "handler": "latest-news.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/latest-news/:id",
+      "handler": "latest-news.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

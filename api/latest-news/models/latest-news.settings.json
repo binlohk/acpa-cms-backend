@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "latest_news",
+  "info": {
+    "name": "Latest News"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 30,
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 60,
+      "required": true
+    }
+  }
+}
