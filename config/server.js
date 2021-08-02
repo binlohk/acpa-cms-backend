@@ -1,5 +1,5 @@
 module.exports = ({ env }) => ({
-  host: env('HOST', '0.0.0.0', '174.138.20.136'),
+  host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
   url: env('STRAPI_URL', ''),
   admin: {
