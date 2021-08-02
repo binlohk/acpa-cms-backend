@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "notifications",
+  "collectionName": "latest_news",
   "info": {
-    "name": "Notification",
+    "name": "Latest News",
     "description": ""
   },
   "options": {
@@ -14,11 +14,12 @@
   "attributes": {
     "title": {
       "type": "string",
+      "maxLength": 40,
       "required": true
     },
     "description": {
       "type": "richtext",
-      "required": true
+      "maxLength": 240
     }
   }
 }
