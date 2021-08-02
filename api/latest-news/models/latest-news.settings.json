@@ -18,9 +18,8 @@
       "required": true
     },
     "description": {
-      "type": "string",
-      "maxLength": 240,
-      "required": true
+      "type": "richtext",
+      "maxLength": 240
     }
   }
 }

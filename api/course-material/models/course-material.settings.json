@@ -28,11 +28,11 @@
       "required": false,
       "pluginOptions": {}
     },
-    "materialDescription": {
-      "type": "string"
-    },
     "materialUrl": {
       "type": "string"
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }
