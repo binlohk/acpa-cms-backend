@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "notifications",
   "info": {
-    "name": "Notification"
+    "name": "Notification",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -16,7 +17,7 @@
       "required": true
     },
     "description": {
-      "type": "text",
+      "type": "richtext",
       "required": true
     }
   }
