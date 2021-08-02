@@ -1,7 +1,7 @@
 'use strict';
 
 const { sanitizeEntity } = require('strapi-utils');
-const stripe = require('stripe')(process.env.STRIPE_SK);
+const stripe = require('stripe')(process.env.ACPA_STRIPE_SK);
 const unparsed = Symbol.for('unparsedBody');
 
 /**
@@ -62,7 +62,7 @@ module.exports = {
         let data;
         let eventType;
         // Check if webhook signing is configured.
-        if (process.env.STRIPE_WEBHOOK_SECRET) {
+        if (process.env.ACPA_STRIPE_WEBHOOK_SECRET) {
             // Retrieve the event by verifying the signature using the raw body and secret.
             let event;
             const unparsedBody = ctx.request.body[unparsed];
@@ -71,7 +71,7 @@ module.exports = {
                 event = stripe.webhooks.constructEvent(
                     unparsedBody,
                     signature,
-                    process.env.STRIPE_WEBHOOK_SECRET
+                    process.env.ACPA_STRIPE_WEBHOOK_SECRET
                 );
 
             } catch (err) {
