@@ -10,6 +10,7 @@ module.exports = {
         "DATABASE_FILENAME": "/home/ubuntu/deploy-production/data/acpa-backend.db",
         "STRAPI_URL": "https://app.acpa.training/api",
         "STRAPI_ADMIN_URL": "https://app.acpa.training/admin",
+        "HOST": "127.0.0.1",
       },
     }
   ]
