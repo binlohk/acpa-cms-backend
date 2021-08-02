@@ -1,12 +1,16 @@
 server {
   listen 80;
   listen [::]:80;
+  listen 443 ssl;
+  ssl_certificate_key /etc/letsencrypt/live/app.acpa.training/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/app.acpa.training/fullchain.pem;
+
 
   root /home/ubuntu/acpa-cms-react/build;
   index index.html index.htm index.nginx-debian.html;
   server_name app.acpa.training;
   client_max_body_size 2G;
-  
+
   location / {
     try_files $uri $uri/ /index.html?$args;
   }
@@ -99,7 +103,7 @@ server {
         proxy_set_header Connection "Upgrade";
         proxy_pass_request_headers on;
     }
-    
+
     location /uploads {
         rewrite ^/uploads/?(.*)$ /uploads/$1 break;
         proxy_pass http://localhost:1337/uploads;
@@ -114,7 +118,7 @@ server {
         proxy_set_header Connection "Upgrade";
         proxy_pass_request_headers on;
     }
-    
+
     location /email {
         rewrite ^/email/?(.*)$ /email/$1 break;
         proxy_pass http://localhost:1337/email;
@@ -129,7 +133,7 @@ server {
         proxy_set_header Connection "Upgrade";
         proxy_pass_request_headers on;
     }
-    
+
     location /users-permissions {
         rewrite ^/users-permissions/?(.*)$ /users-permissions/$1 break;
         proxy_pass http://localhost:1337/users-permissions;
