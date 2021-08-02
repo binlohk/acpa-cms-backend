@@ -1,6 +1,9 @@
 server{
   listen 80;
   listen [::]:80;
+  listen 443 ssl;
+  ssl_certificate_key /etc/letsencrypt/live/app.acpa.training/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/app.acpa.training/fullchain.pem;
 
   root /home/ubuntu/acpa-cms-react/build;
   index index.html index.htm index.nginx-debian.html;
