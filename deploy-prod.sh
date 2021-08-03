@@ -6,7 +6,7 @@ set -ex
 export NODE_ENV=production
 export DATABASE_FILENAME=/home/ubuntu/deploy-production/data/acpa-backend.db
 export STRAPI_URL=https://app.acpa.training/api
-export STRAPI_ADMIN_URL=https://app.acpa.training/admin
+export STRAPI_ADMIN_URL=/admin
 export HOST=0.0.0.0
 
 SCRIPT_SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
