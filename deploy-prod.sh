@@ -3,7 +3,7 @@
 # Exit on any error
 set -ex
 
-export NODE_ENV=production
+export NODE_ENV=production_
 export DATABASE_FILENAME=/home/ubuntu/deploy-production/data/acpa-backend.db
 export STRAPI_URL=https://app.acpa.training/api
 export STRAPI_ADMIN_URL=/admin
