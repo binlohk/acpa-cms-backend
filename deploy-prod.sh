@@ -21,9 +21,16 @@ rm -rf ./build
 rm -rf ./.tmp
 git clean -fdx
 
+# Creating env file 
+touch .env
+echo ACPA_STRIPE_SK=${{ secrets.ACPA_STRIPE_SK }} >> .env
+
 # Build it
 npm install
 npm run build
+
+# remove the env file
+rm -rf .env
 
 rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
