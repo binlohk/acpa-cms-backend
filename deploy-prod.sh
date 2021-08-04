@@ -3,8 +3,6 @@
 # Exit on any error
 set -ex
 
-export NODE_ENV=production
-
 SCRIPT_SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 BUILD_DIR=$(mktemp -d)
@@ -27,7 +25,7 @@ echo ACPA_STRIPE_SK=${{ secrets.ACPA_STRIPE_SK }} >> .env
 
 # Build it
 npm install
-npm run build
+npm run build --clean
 
 # remove the env file
 rm -rf .env
