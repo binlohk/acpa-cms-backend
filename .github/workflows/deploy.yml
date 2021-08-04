@@ -19,5 +19,17 @@ jobs:
           key: ${{ secrets.ACPA_SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.ACPA_SSH_KNOWN_HOSTS }}
 
+      - name: Creating .env file
+        run: |
+          touch .env
+          echo ACPA_STRIPE_SK=${{ secrets.ACPA_STRIPE_SK }} >> .env
+          echo ACPA_STRIPE_WEBHOOK_SECRET=${{ secrets.ACPA_STRIPE_WEBHOOK_SECRET }} >> .env
+          echo BASE_URL=${{ secrets.ACPA_REACT_APP_FRONTEND_SERVER }} >> .env
+          echo REFERRAL_POINT_EARNED=1 >> .env
+          echo BRONZE_POINTS=5 >> .env
+          echo SILVER_POINTS=10 >> .env
+          echo GOLD_POINTS=15 >> .env
+          echo NODE_ENV=production 
+
       - name: Build and deploy
         run: ./deploy-prod.sh
