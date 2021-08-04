@@ -19,11 +19,6 @@ rm -rf ./build
 rm -rf ./.tmp
 git clean -fdx
 
-# Creating env file 
-touch .env
-echo ACPA_STRIPE_SK=${{ secrets.ACPA_STRIPE_SK }} >> .env
-echo ACPA_STRIPE_WEBHOOK_SECRET=${{ secrets.ACPA_STRIPE_WEBHOOK_SECRET }} >> .env
-
 # Build it
 npm install
 npm run build --clean
