@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/free-course-applies",
+      "handler": "free-course-apply.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/free-course-applies/count",
+      "handler": "free-course-apply.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/free-course-applies/:id",
+      "handler": "free-course-apply.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/free-course-applies",
+      "handler": "free-course-apply.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/free-course-applies/:id",
+      "handler": "free-course-apply.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/free-course-applies/:id",
+      "handler": "free-course-apply.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
