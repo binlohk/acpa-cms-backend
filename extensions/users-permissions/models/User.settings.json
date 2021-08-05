@@ -110,10 +110,6 @@
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
-    },
-    "free_course_applies": {
-      "via": "user",
-      "collection": "free-course-apply"
     }
   }
 }
