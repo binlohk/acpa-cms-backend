@@ -29,24 +29,7 @@ module.exports = {
             const course = await strapi.services['course'].findOne({ id: courseId });
             const priceKey = course.stripePriceKey;
             if (!priceKey) {
-                try {
-                    const { courseId } = ctx.request.body;
-                    const course = await strapi.services['course'].findOne({ id: courseId });
-
-                    const entity = await strapi.services['user-payment'].create({
-                        user: ctx.state.user,
-                        course,
-                        sessionID: "free"
-                    });
-
-                    const user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                    const userCourses = user.courses;
-                    userCourses.push({ id: courseId });
-                    const userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: course });
-                    return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
-                } catch (e) {
-                    console.log(e);
-                }
+                ctx.badRequest('The course has no valid Stripe price key. Please contact support.');
             }
             const session = await stripe.checkout.sessions.create({
                 success_url: `${process.env.BASE_URL}/payment-success/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
