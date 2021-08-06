@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "free_course_applies",
+  "info": {
+    "name": "Free Course Apply",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "course": {
+      "via": "free_course_applies",
+      "model": "course"
+    },
+    "user": {
+      "via": "free_course_applies",
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}
