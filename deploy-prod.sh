@@ -22,9 +22,7 @@ git clean -fdx
 # Build it
 npm install
 npm run build --clean
-
-# remove the env file
-rm -rf .env
+ls
 
 rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
