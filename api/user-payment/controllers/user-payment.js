@@ -1,8 +1,8 @@
 'use strict';
 
 let { sanitizeEntity } = require('strapi-utils');
-letstripe = require('stripe')(process.env.ACPA_STRIPE_SK);
-letunparsed = Symbol.for('unparsedBody');
+let stripe = require('stripe')(process.env.ACPA_STRIPE_SK);
+let unparsed = Symbol.for('unparsedBody');
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
