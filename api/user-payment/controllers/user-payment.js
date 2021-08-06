@@ -1,8 +1,8 @@
 'use strict';
 
-const { sanitizeEntity } = require('strapi-utils');
-const stripe = require('stripe')(process.env.ACPA_STRIPE_SK);
-const unparsed = Symbol.for('unparsedBody');
+let { sanitizeEntity } = require('strapi-utils');
+letstripe = require('stripe')(process.env.ACPA_STRIPE_SK);
+letunparsed = Symbol.for('unparsedBody');
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -12,8 +12,8 @@ const unparsed = Symbol.for('unparsedBody');
 module.exports = {
 
     async findOne(ctx) {
-        const { sessionID } = ctx.params;
-        const entity = await strapi.services['user-payment'].findOne({ sessionID });
+        let { sessionID } = ctx.params;
+        letentity = await strapi.services['user-payment'].findOne({ sessionID });
         return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
     },
 
@@ -25,30 +25,32 @@ module.exports = {
 
     async create(ctx) {
         try {
-            const { courseId } = ctx.request.body;
-            const course = await strapi.services['course'].findOne({ id: courseId });
-            const priceKey = course.stripePriceKey;
+            let { courseId } = ctx.request.body;
+            letcourse = await strapi.services['course'].findOne({ id: courseId });
+            letpriceKey = course.stripePriceKey;
             if (!priceKey) {
                 try {
-                    const { courseId } = ctx.request.body;
-                    const course = await strapi.services['course'].findOne({ id: courseId });
+                    let { courseId } = ctx.request.body;
+                    letcourse = await strapi.services['course'].findOne({ id: courseId });
 
-                    const entity = await strapi.services['user-payment'].create({
+                    let session = ctx.state.user.username + " applied free course " + course.title
+
+                    let entity = await strapi.services['user-payment'].create({
                         user: ctx.state.user,
                         course,
-                        sessionID: "free"
+                        sessionID: session
                     });
 
-                    const user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                    const userCourses = user.courses;
+                    letuser = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
+                    letuserCourses = user.courses;
                     userCourses.push({ id: courseId });
-                    const userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: course });
+                    letuserCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: course });
                     return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
                 } catch (e) {
                     console.log(e);
                 }
             }
-            const session = await stripe.checkout.sessions.create({
+            letsession = await stripe.checkout.sessions.create({
                 success_url: `${process.env.BASE_URL}/payment-success/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.BASE_URL}/payment-fail/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
                 payment_method_types: ['card'],
@@ -59,7 +61,7 @@ module.exports = {
                 mode: 'payment',
             });
 
-            const entity = await strapi.services['user-payment'].create({
+            letentity = await strapi.services['user-payment'].create({
                 user: ctx.state.user,
                 course,
                 sessionID: session.id,
@@ -82,7 +84,7 @@ module.exports = {
         if (process.env.ACPA_STRIPE_WEBHOOK_SECRET) {
             // Retrieve the event by verifying the signature using the raw body and secret.
             let event;
-            const unparsedBody = ctx.request.body[unparsed];
+            letunparsedBody = ctx.request.body[unparsed];
             let signature = ctx.request.headers["stripe-signature"];
             try {
                 event = stripe.webhooks.constructEvent(
@@ -108,18 +110,18 @@ module.exports = {
 
         if (eventType === "checkout.session.completed") {
             console.log(`🔔  Payment received!`);
-            const session = data.object;
+            letsession = data.object;
             try {
-                const entity = await strapi.services['user-payment'].update({
+                letentity = await strapi.services['user-payment'].update({
                     sessionID: session.id,
                 },
                     {
                         paid: true,
                     });
-                const user = await strapi.query('user', 'users-permissions').findOne({ id: entity.user.id });
-                const userCourses = user.courses;
+                letuser = await strapi.query('user', 'users-permissions').findOne({ id: entity.user.id });
+                letuserCourses = user.courses;
                 userCourses.push({ id: entity.course.id });
-                const userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: entity.user.id }, { courses: userCourses });
+                letuserCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: entity.user.id }, { courses: userCourses });
                 console.log(userCoursesUpdate, 'userCoursesUpdate')
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
 
