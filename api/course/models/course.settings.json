@@ -63,10 +63,6 @@
       "type": "string",
       "unique": true,
       "private": false
-    },
-    "free_course_applies": {
-      "via": "course",
-      "collection": "free-course-apply"
     }
   }
 }
