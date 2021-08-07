@@ -9,6 +9,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/setPushToken",
+      "handler": "Auth.setPushToken",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "GET",
       "path": "/",
       "handler": "UsersPermissions.index",

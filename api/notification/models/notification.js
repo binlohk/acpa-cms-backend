@@ -5,4 +5,10 @@
  * to customize this model
  */
 
-module.exports = {};
+module.exports = {
+  lifecycles: {
+    async afterCreate(result, data){
+
+    },
+  },
+};
