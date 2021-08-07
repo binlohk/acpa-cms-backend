@@ -43,6 +43,9 @@
       "configurable": false,
       "private": true
     },
+    "pushNotificationToken": {
+      "type": "string"
+    },
     "confirmed": {
       "type": "boolean",
       "default": false,
