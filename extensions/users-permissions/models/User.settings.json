@@ -44,7 +44,9 @@
       "private": true
     },
     "pushNotificationToken": {
-      "type": "string"
+      "type": "string",
+      "configurable": false,
+      "private": true
     },
     "confirmed": {
       "type": "boolean",
