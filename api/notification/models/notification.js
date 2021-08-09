@@ -1,7 +1,7 @@
 'use strict';
 const { Expo } = require('expo-server-sdk');
 
-const expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+const expo = new Expo({ accessToken: process.env.ACPA_EXPO_ACCESS_TOKEN });
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#lifecycle-hooks)
@@ -26,17 +26,12 @@ module.exports = {
         }));
       let chunks = expo.chunkPushNotifications(messages);
       for (let chunk of chunks) {
-        try {
-          let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          strapi.log.debug(ticketChunk);
-          strapi.log.debug(JSON.stringify(ticketChunk));
-          // NOTE: If a ticket contains an error code in ticket.details.error, you
-          // must handle it appropriately. The error codes are listed in the Expo
-          // documentation:
-          // https://docs.expo.io/push-notifications/sending-notifications/#individual-errors
-        } catch (error) {
-          strapi.log.error(error);
-        }
+        expo.sendPushNotificationsAsync(chunk)
+          .then(ticketChunk => {
+            strapi.log.debug(ticketChunk)
+            strapi.log.debug(JSON.stringify(ticketChunk))
+          })
+          .catch(err => strapi.log.error(err));
       }
     },
   },
