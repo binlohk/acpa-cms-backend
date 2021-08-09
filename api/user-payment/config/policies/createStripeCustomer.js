@@ -12,6 +12,6 @@ module.exports = async (ctx, next) => {
         }
         return await next();
     } catch (e) {
-        ctx.badRequest("Something went wrong with Stripe. Please contact support.")
+        ctx.badRequest(e.message)
     }
 };
