@@ -25,13 +25,11 @@ module.exports = {
           body: result.description,
         }));
       let chunks = expo.chunkPushNotifications(messages);
-      let tickets = [];
       for (let chunk of chunks) {
         try {
           let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
           strapi.log.debug(ticketChunk);
           strapi.log.debug(JSON.stringify(ticketChunk));
-          tickets.push(...ticketChunk);
           // NOTE: If a ticket contains an error code in ticket.details.error, you
           // must handle it appropriately. The error codes are listed in the Expo
           // documentation:
