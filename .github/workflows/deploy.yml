@@ -31,6 +31,7 @@ jobs:
           echo SILVER_POINTS=10 >> .env
           echo GOLD_POINTS=15 >> .env
           echo NODE_ENV=production >> .env
+          cat .env
 
       - name: Build and deploy
         run: ./deploy-prod.sh
