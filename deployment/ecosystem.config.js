@@ -11,7 +11,6 @@ module.exports = {
         "STRAPI_URL": "https://app.acpa.training/api",
         "STRAPI_ADMIN_URL": "https://app.acpa.training/api/admin",
         "HOST": "0.0.0.0",
-        "EXPO_ACCESS_TOKEN": "IFRh6S6xy8DCpE4PM1mvTFuVInnfgiFEwtmUHm3y",
       },
     }
   ]
