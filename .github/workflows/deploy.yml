@@ -25,11 +25,12 @@ jobs:
           echo ACPA_STRIPE_SK=${{ secrets.ACPA_STRIPE_SK }} >> .env
           echo ACPA_STRIPE_WEBHOOK_SECRET=${{ secrets.ACPA_STRIPE_WEBHOOK_SECRET }} >> .env
           echo BASE_URL=${{ secrets.ACPA_REACT_APP_FRONTEND_SERVER }} >> .env
+          echo ACPA_EXPO_ACCESS_TOKEN=${{ secrets.ACPA_EXPO_ACCESS_TOKEN }} >> .env
           echo REFERRAL_POINT_EARNED=1 >> .env
           echo BRONZE_POINTS=5 >> .env
           echo SILVER_POINTS=10 >> .env
           echo GOLD_POINTS=15 >> .env
-          echo NODE_ENV=production 
+          echo NODE_ENV=production >> .env
 
       - name: Build and deploy
         run: ./deploy-prod.sh
