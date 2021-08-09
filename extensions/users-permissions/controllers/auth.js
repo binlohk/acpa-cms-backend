@@ -30,6 +30,20 @@ module.exports = {
       console.log(e)
     }
   },
+  async setPushToken(ctx){
+    if (!ctx.state.user){
+      return ctx.unauthorized(null, 'Login required.');
+    }
+    const user = ctx.state.user;
+    const params = _.assign({}, ctx.request.body, ctx.params);
+    if (!params.pushToken){
+      return ctx.badRequest(null, "No pushToken provided.");
+    }
+    await strapi
+      .query('user', 'users-permissions')
+      .update({ id: user.id }, { pushNotificationToken: params.pushToken });
+    return ctx.send({ ok: true });
+  },
   async callback(ctx) {
     const provider = ctx.params.provider || 'local';
     const params = ctx.request.body;
