@@ -18,7 +18,8 @@
       "unique": true
     },
     "description": {
-      "type": "richtext"
+      "type": "richtext",
+      "required": true
     },
     "price": {
       "type": "decimal",
@@ -26,9 +27,9 @@
       "default": 0
     },
     "users": {
+      "private": true,
       "via": "courses",
       "plugin": "users-permissions",
-      "private": true,
       "collection": "user"
     },
     "course_materials": {
