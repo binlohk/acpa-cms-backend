@@ -19,9 +19,9 @@ rm -rf ./build
 rm -rf ./.tmp
 
 # hack to preserve .env
-cp .env .env.tmp
+cp .env env.tmp
 git clean -fdx
-mv .env.tmp .env
+mv env.tmp .env
 
 # Build it
 npm install
