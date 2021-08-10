@@ -10,7 +10,7 @@ const expo = new Expo({ accessToken: process.env.ACPA_EXPO_ACCESS_TOKEN });
 
 module.exports = {
   lifecycles: {
-    async afterCreate(result, data){
+    async afterCreate(result, data) {
       const users = await strapi
         .query('user', 'users-permissions')
         .find({ _limit: -1 });
@@ -25,14 +25,25 @@ module.exports = {
           body: result.description,
         }));
       let chunks = expo.chunkPushNotifications(messages);
-      for (let chunk of chunks) {
-        expo.sendPushNotificationsAsync(chunk)
-          .then(ticketChunk => {
-            strapi.log.debug(ticketChunk)
-            strapi.log.debug(JSON.stringify(ticketChunk))
-          })
-          .catch(err => strapi.log.error(err));
-      }
+      (async () => {
+        for (let chunk of chunks) {
+          try {
+            let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            console.log(ticketChunk);
+            tickets.push(...ticketChunk);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      })();
+      // for (let chunk of chunks) {
+      //   expo.sendPushNotificationsAsync(chunk)
+      //     .then(ticketChunk => {
+      //       strapi.log.debug(ticketChunk)
+      //       strapi.log.debug(JSON.stringify(ticketChunk))
+      //     })
+      //     .catch(err => strapi.log.error(err));
+      // }
     },
   },
 };
