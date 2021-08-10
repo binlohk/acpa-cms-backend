@@ -19,9 +19,9 @@ rm -rf ./build
 rm -rf ./.tmp
 
 # hack to preserve .env
-cp .env env.tmp
+cp .env /tmp/acpa-deploy/.env
 git clean -fdx
-mv env.tmp .env
+mv /tmp/acpa-deploy/.env .env
 
 # Build it
 npm install
