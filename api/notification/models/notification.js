@@ -1,8 +1,7 @@
 'use strict';
 const { Expo } = require('expo-server-sdk');
 
-//const expo = new Expo({ accessToken: process.env.ACPA_EXPO_ACCESS_TOKEN });
-const expo = new Expo({ accessToken: `${process.env.ACPA_EXPO_ACCESS_TOKEN}` });
+const expo = new Expo({ accessToken: process.env.ACPA_EXPO_ACCESS_TOKEN });
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#lifecycle-hooks)
@@ -11,7 +10,7 @@ const expo = new Expo({ accessToken: `${process.env.ACPA_EXPO_ACCESS_TOKEN}` });
 
 module.exports = {
   lifecycles: {
-    async afterCreate(result, data){
+    async afterCreate(result, data) {
       const users = await strapi
         .query('user', 'users-permissions')
         .find({ _limit: -1 });
