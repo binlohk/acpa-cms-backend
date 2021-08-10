@@ -17,7 +17,11 @@ cd $(basename "$SCRIPT_SRC_DIR")
 # Clear all build directories for a fresh build
 rm -rf ./build
 rm -rf ./.tmp
+
+# hack to preserve .env
+cp .env .env.tmp
 git clean -fdx
+mv .env.tmp .env
 
 # Build it
 npm install
