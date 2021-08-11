@@ -9,7 +9,7 @@ module.exports = ({ env }) => ({
     settings: {
       defaultFrom: 'kelvin@acpa.training',
       defaultReplyTo: 'kelvin@acpa.training',
-      testAddress: 'winnie@binlo.io',
+      testAddress: '',
     },
 
   },
