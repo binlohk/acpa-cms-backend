@@ -64,6 +64,10 @@
       "type": "string",
       "unique": true,
       "private": false
+    },
+    "enroll_forms": {
+      "via": "courses",
+      "collection": "enroll-form"
     }
   }
 }

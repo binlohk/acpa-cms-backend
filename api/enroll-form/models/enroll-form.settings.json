@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "enroll_forms",
+  "info": {
+    "name": "Enroll Form",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "promoTitle": {
+      "type": "string"
+    },
+    "promoContent": {
+      "type": "richtext"
+    },
+    "lessonTitle": {
+      "type": "string"
+    },
+    "lessonContent": {
+      "type": "richtext"
+    },
+    "courses": {
+      "collection": "course",
+      "via": "enroll_forms",
+      "dominant": true
+    },
+    "poster": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    }
+  }
+}
