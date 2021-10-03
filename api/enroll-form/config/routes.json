@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/enroll-forms",
+      "handler": "enroll-form.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/enroll-forms/count",
+      "handler": "enroll-form.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/enroll-forms/:id",
+      "handler": "enroll-form.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/enroll-forms",
+      "handler": "enroll-form.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/enroll-forms/:id",
+      "handler": "enroll-form.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/enroll-forms/:id",
+      "handler": "enroll-form.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
