@@ -28,7 +28,8 @@ module.exports = {
             let { courseId } = ctx.request.body;
             let course = await strapi.services['course'].findOne({ id: courseId });
             let priceKey = course.stripePriceKey;
-            if (!priceKey) {
+            let price = course.price;
+            if (!priceKey && !price) {
                 try {
                     let { courseId } = ctx.request.body;
                     let course = await strapi.services['course'].findOne({ id: courseId });
@@ -44,29 +45,32 @@ module.exports = {
                     let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
                     let userCourses = user.courses;
                     userCourses.push({ id: courseId });
-                    let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: course });
+                    let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                     return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
                 } catch (e) {
                     console.log(e);
                 }
+            } else if (!priceKey && price) {
+                return ctx.badRequest(`⚠️  No price key available.`);
+            } else {
+                let session = await stripe.checkout.sessions.create({
+                    success_url: `${process.env.BASE_URL}/payment-success/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
+                    cancel_url: `${process.env.BASE_URL}/payment-fail/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
+                    payment_method_types: ['card'],
+                    line_items: [
+                        { price: priceKey, quantity: 1 },
+                    ],
+                    client_reference_id: ctx.state.user.stripeCustomerKey,
+                    mode: 'payment',
+                });
+    
+                let entity = await strapi.services['user-payment'].create({
+                    user: ctx.state.user,
+                    course,
+                    sessionID: session.id,
+                });
+                return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
             }
-            let session = await stripe.checkout.sessions.create({
-                success_url: `${process.env.BASE_URL}/payment-success/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${process.env.BASE_URL}/payment-fail/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
-                payment_method_types: ['card'],
-                line_items: [
-                    { price: priceKey, quantity: 1 },
-                ],
-                client_reference_id: ctx.state.user.stripeCustomerKey,
-                mode: 'payment',
-            });
-
-            let entity = await strapi.services['user-payment'].create({
-                user: ctx.state.user,
-                course,
-                sessionID: session.id,
-            });
-            return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
         } catch (e) {
             console.log(e);
         }

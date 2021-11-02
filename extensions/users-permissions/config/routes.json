@@ -324,6 +324,23 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/registerAndEnroll/:referralToken?",
+      "handler": "Auth.registerAndEnroll",
+      "config": {
+        "policies": [
+          "plugins::users-permissions.ratelimit"
+        ],
+        "prefix": "",
+        "description": "Register a new user with the default role, and record user referral without email verification.",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "create"
+        }
+      }
+    },
+    {
       "method": "GET",
       "path": "/auth/:provider/callback",
       "handler": "Auth.callback",

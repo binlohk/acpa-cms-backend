@@ -30,13 +30,13 @@ module.exports = {
       console.log(e)
     }
   },
-  async setPushToken(ctx){
-    if (!ctx.state.user){
+  async setPushToken(ctx) {
+    if (!ctx.state.user) {
       return ctx.unauthorized(null, 'Login required.');
     }
     const user = ctx.state.user;
     const params = _.assign({}, ctx.request.body, ctx.params);
-    if (!params.pushToken){
+    if (!params.pushToken) {
       return ctx.badRequest(null, "No pushToken provided.");
     }
     await strapi
@@ -538,6 +538,136 @@ module.exports = {
         : _.includes(error.message, 'token')
           ? { id: 'Auth.form.error.invalid.token', message: error.message }
           : { id: 'Auth.form.error.email.taken', message: 'Email already taken' };
+
+      ctx.badRequest(null, formatError(adminError));
+    }
+  },
+
+  async registerAndEnroll(ctx) {
+    const pluginStore = await strapi.store({
+      environment: '',
+      type: 'plugin',
+      name: 'users-permissions',
+    });
+
+    const settings = await pluginStore.get({
+      key: 'advanced',
+    });
+    if (!settings.allow_register) {
+      return ctx.badRequest(
+        null,
+        fopostmarmatError({
+          id: 'Auth.advanced.allow_register',
+          message: 'Register action is currently disabled.',
+        })
+      );
+    }
+
+    const params = {
+      ..._.omit(ctx.request.body, ['confirmed', 'confirmationToken', 'resetPasswordToken']),
+      provider: 'local',
+    };
+
+    // Phone is required.
+    if (!params.phone) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.phone.provide',
+          message: 'Please provide your phone.',
+        })
+      );
+    }
+
+    // Email is required.
+    if (!params.email) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.email.provide',
+          message: 'Please provide your email.',
+        })
+      );
+    }
+
+    const role = await strapi
+      .query('role', 'users-permissions')
+      .findOne({ type: settings.default_role }, []);
+
+    if (!role) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.role.notFound',
+          message: 'Impossible to find the default role.',
+        })
+      );
+    }
+
+    // Check if the provided email is valid or not.
+    const isEmail = emailRegExp.test(params.email);
+
+    if (isEmail) {
+      params.email = params.email.toLowerCase();
+    } else {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.email.format',
+          message: 'Please provide valid email address.',
+        })
+      );
+    }
+
+    params.role = role.id;
+    params.password = await strapi.plugins['users-permissions'].services.user.hashPassword(params);
+
+    const user = await strapi.query('user', 'users-permissions').findOne({
+      email: params.email,
+    });
+
+    if ((user && user.provider === params.provider) || (user && user.provider !== params.provider && settings.unique_email)) {
+      return ctx.badRequest(
+        null,
+        formatError({
+          id: 'Auth.form.error.email.taken',
+          message: 'Email is already taken.',
+        })
+      );
+    }
+
+    try {
+      params.confirmed = true;
+      const user = await strapi.query('user', 'users-permissions').create(params);
+      const sanitizedUser = sanitizeEntity(user, {
+        model: strapi.query('user', 'users-permissions').model,
+      });
+
+      const jwt = strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id']));
+
+      const { referralToken } = ctx.params;
+      if (referralToken) {
+        const referrer = await strapi.plugins['users-permissions'].services.jwt.verify(referralToken);
+        let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
+          email: referrer.email,
+        });
+
+        if (!referrerData) {
+          return ctx.badRequest("The referrer token is invalid.");
+        }
+      }
+
+      return ctx.send({
+        jwt,
+        user: sanitizedUser,
+      });
+    } catch (err) {
+      const adminError = _.includes(err.message, 'username')
+        ? {
+          id: 'Auth.form.error.username.taken',
+          message: 'Username already taken',
+        }
+        : { id: 'Auth.form.error.email.taken', message: 'Email already taken' };
 
       ctx.badRequest(null, formatError(adminError));
     }

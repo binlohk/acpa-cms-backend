@@ -26,7 +26,7 @@ const customizeEntityValue = async (entity) => {
     const entityWithoutPrivateField = sanitizeEntity(entity, { model: strapi.models.course });
     const unresolvedArray = entity.lessons.map(lesson => { return grabDuration(lesson.videoUrl) })
     // 2nd parameter, pass a function to Promise.all to resolve the data
-    let lessonVideos
+    let lessonVideos;
     let lessonsDetail = [];
     await Promise.all(unresolvedArray).then((values) => {
         lessonVideos = values.map(value => {
