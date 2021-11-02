@@ -29,7 +29,7 @@ module.exports = {
             let course = await strapi.services['course'].findOne({ id: courseId });
             let priceKey = course.stripePriceKey;
             let price = course.price;
-            if (!priceKey && !price) {
+            if (!priceKey && (!price || price <= 0)) {
                 try {
                     let { courseId } = ctx.request.body;
                     let course = await strapi.services['course'].findOne({ id: courseId });
@@ -50,7 +50,7 @@ module.exports = {
                 } catch (e) {
                     console.log(e);
                 }
-            } else if (!priceKey && price) {
+            } else if (!priceKey && price > 0) {
                 return ctx.badRequest(`⚠️  No price key available.`);
             } else {
                 let session = await stripe.checkout.sessions.create({

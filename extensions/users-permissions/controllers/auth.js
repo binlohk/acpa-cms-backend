@@ -646,15 +646,35 @@ module.exports = {
       const jwt = strapi.plugins['users-permissions'].services.jwt.issue(_.pick(user, ['id']));
 
       const { referralToken } = ctx.params;
-      if (referralToken) {
-        const referrer = await strapi.plugins['users-permissions'].services.jwt.verify(referralToken);
-        let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
-          email: referrer.email,
-        });
+      try {
+        if (referralToken) {
+          const { user: userService, jwt: jwtService } = strapi.plugins['users-permissions'].services;
+          const referrer = await jwtService.verify(referralToken);
+          let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
+            email: referrer.email,
+          });
+          const userReferralData = {
+            "referral_referrer": referrerData,
+            "referral_referree": user
+          }
 
-        if (!referrerData) {
-          return ctx.badRequest("The referrer token is invalid.");
+          await strapi.query('user-referral').create(userReferralData);
+          let referrerNewPoint = parseInt(process.env.REFERRAL_POINT_EARNED);
+          if (parseInt(referrerData.point) > 0) {
+            referrerNewPoint = referrerNewPoint + parseInt(referrerData.point);
+          }
+          if (referrerNewPoint > process.env.GOLD_POINTS) {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Gold', point: referrerNewPoint });
+          } else if (referrerNewPoint > process.env.SILVER_POINTS) {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Silver', point: referrerNewPoint });
+          } else if (referrerNewPoint > process.env.BRONZE_POINTS) {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Bronze', point: referrerNewPoint });
+          } else {
+            await userService.edit({ id: referrerData.id }, { Membership: 'Basic', point: referrerNewPoint });
+          }
         }
+      } catch (error) {
+        return ctx.badRequest('referrer token invalid');
       }
 
       return ctx.send({
