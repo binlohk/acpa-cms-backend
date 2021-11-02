@@ -115,6 +115,9 @@
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
+    },
+    "phone": {
+      "type": "string"
     }
   }
 }
