@@ -7,7 +7,14 @@ const axios = require('axios');
  * to customize this controller
  */
 const grabVideoId = (videoUrl) => {
-    return videoUrl.replace(`https://player.vimeo.com/video/`, '')
+    if(videoUrl.match(/vimeo.com/g) == null){
+        return videoUrl.replace(`https://player.vimeo.com/video/`, '')
+    }
+    else{
+        videoUrl = videoUrl.substring(18);
+        return videoUrl.replace(`https://player.vimeo.com/video/`, '')
+    }
+   
 }
 
 const grabDuration = async (videoUrl) => {
