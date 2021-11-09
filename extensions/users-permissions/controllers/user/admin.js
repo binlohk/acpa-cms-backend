@@ -169,16 +169,7 @@ module.exports = {
         .query('user', 'users-permissions')
         .findOne({ username });
 
-      if (userWithSameUsername && userWithSameUsername.id != id) {
-        return ctx.badRequest(
-          null,
-          formatError({
-            id: 'Auth.form.error.username.taken',
-            message: 'username.alreadyTaken.',
-            field: ['username'],
-          })
-        );
-      }
+
     }
 
     if (_.has(body, 'email') && advancedConfigs.unique_email) {
