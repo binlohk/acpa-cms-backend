@@ -10,6 +10,8 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^31.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.3",
     "axios": "^0.21.1",
     "expo-server-sdk": "^3.6.0",
     "knex": "0.21.18",
