@@ -80,17 +80,6 @@ module.exports = {
       .query('user', 'users-permissions')
       .findOne({ username });
 
-    if (userWithSameUsername) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: 'Auth.form.error.username.taken',
-          message: 'Username already taken.',
-          field: ['username'],
-        })
-      );
-    }
-
     if (advanced.unique_email) {
       const userWithSameEmail = await strapi
         .query('user', 'users-permissions')
