@@ -26,6 +26,11 @@ module.exports = {
         const currentPublished_at = data.published_at;
         if (currentPublished_at != previousPublishedAt) {
           // console.log('Triggered only when published.');
+          const NotificationDesc = previousData.description;
+          const SanitizedNotificationDescription = NotificationDesc.replace(/<[^>]+>/g, '');
+          
+          const  NotificationTitle = previousData.title;
+          const SanitizedNotificationTitle = NotificationTitle.replace(/<[^>]+>/g, '');
           const users = await strapi
           .query('user', 'users-permissions')
           .find({ _limit: -1 });
@@ -36,8 +41,8 @@ module.exports = {
           .map(token => ({
             to: token,
             sound: 'default',
-            title: previousData.title,
-            body: previousData.description,
+            title: SanitizedNotificationTitle,
+            body: SanitizedNotificationDescription,
           }));
           let chunks = expo.chunkPushNotifications(messages);
           (async () => {
