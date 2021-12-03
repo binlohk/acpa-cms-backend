@@ -40,6 +40,12 @@
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
+    },
+    "InvitationMessage": {
+      "type": "richtext"
+    },
+    "LessonDate": {
+      "type": "datetime"
     }
   }
 }
