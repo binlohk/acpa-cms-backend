@@ -27,9 +27,9 @@
       "default": 0
     },
     "users": {
+      "private": true,
       "via": "courses",
       "plugin": "users-permissions",
-      "private": true,
       "collection": "user"
     },
     "course_materials": {
@@ -68,6 +68,9 @@
     "enroll_forms": {
       "via": "courses",
       "collection": "enroll-form"
+    },
+    "CoursePromoContent": {
+      "type": "richtext"
     }
   }
 }
