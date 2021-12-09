@@ -106,8 +106,8 @@ module.exports = {
       await strapi.plugins["email"].services.email
         .send({
           to: EnrolledUSerEmail,
-          from: "meet@binlo.com.hk",
-          replyTo: "meet@binlo.com.hk",
+          from: "admin@acpa.training",
+          replyTo: "admin@acpa.training",
           subject: InvitationMessageSubject,
           html: UserDetailsTable,
         })
