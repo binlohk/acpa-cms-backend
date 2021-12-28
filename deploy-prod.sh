@@ -28,7 +28,6 @@ rsync -avzr . ubuntu@174.138.20.136:~/deploy-production/acpa-cms-backend
 
 ## Deploy nginx and pm2 config
 rsync -v --rsync-path="sudo rsync" --chown=root:root --chmod=0644 ./deployment/app.acpa.training ubuntu@174.138.20.136:/etc/nginx/sites-available/app.acpa.training
-rsync -v --rsync-path="sudo rsync" --chown=ubuntu:ubuntu --chmod=0644 ./deployment/ecosystem.config.js ubuntu@174.138.20.136:/home/ubuntu/deploy-production/ecosystem.config.js
 
 ssh ubuntu@174.138.20.136 "pm2 restart /home/ubuntu/deploy-production/ecosystem.config.js && sudo nginx -s reload"
 
