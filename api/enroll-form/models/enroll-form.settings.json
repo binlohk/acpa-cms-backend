@@ -43,9 +43,6 @@
     },
     "InvitationMessage": {
       "type": "richtext"
-    },
-    "LessonDate": {
-      "type": "datetime"
     }
   }
 }
