@@ -30,6 +30,9 @@
     "course": {
       "via": "lessons",
       "model": "course"
+    },
+    "LessonDate": {
+      "type": "datetime"
     }
   }
 }
