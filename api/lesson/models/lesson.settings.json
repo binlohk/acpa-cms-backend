@@ -33,6 +33,9 @@
     },
     "LessonDate": {
       "type": "datetime"
+    },
+    "LessonDate2": {
+      "type": "datetime"
     }
   }
 }

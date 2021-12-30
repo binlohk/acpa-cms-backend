@@ -94,6 +94,8 @@ const customizeEntityValue = async (entity) => {
             text: lesson.lessonDescription,
             finished: false,
             videoDuration: lookupDuration(lesson),
+            LessonDate: lesson.LessonDate,
+            LessonDate2: lesson.LessonDate2,
           });
         }
       })
