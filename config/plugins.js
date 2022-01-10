@@ -6,9 +6,9 @@ module.exports = ({ env }) => ({
         apiKey: env("SENDGRID_API_KEY"),
       },
       settings: {
-        defaultFrom: "kelvin@acpa.training",
-        defaultReplyTo: "kelvin@acpa.training",
-        testAddress: "kelvin@acpa.training",
+        defaultFrom: "admin@acpa.training",
+        defaultReplyTo: "admin@acpa.training",
+        testAddress: "admin@acpa.training",
       },
     },
   },
