@@ -1,14 +1,15 @@
 module.exports = ({ env }) => ({
-    email: {
-      provider: 'sendgrid',
+  email: {
+    config: {
+      provider: "sendgrid",
       providerOptions: {
-        apiKey: env('SENDGRID_API_KEY'),
+        apiKey: env("SENDGRID_API_KEY"),
       },
       settings: {
-        defaultFrom: 'kelvin@acpa.training',
-        defaultReplyTo: 'kelvin@acpa.training',
-        testAddress: 'kelvin@acpa.training',
+        defaultFrom: "kelvin@acpa.training",
+        defaultReplyTo: "kelvin@acpa.training",
+        testAddress: "kelvin@acpa.training",
       },
-  
     },
-  });
+  },
+});
