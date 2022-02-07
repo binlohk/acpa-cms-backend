@@ -37,11 +37,8 @@
       "collection": "course-material"
     },
     "lessons": {
-<<<<<<< HEAD
-=======
       "via": "course",
       "private": true,
->>>>>>> main
       "via": "course",
       "private": true,
       "collection": "lesson"
