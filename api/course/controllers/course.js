@@ -117,7 +117,6 @@ const customizeEntityValue = async (entity) => {
 };
 
 const checkIfUserFinishedLesson = async (entity, userId) => {
-  console.log(entity.lessonsDetail, "entity.lessonsDetail");
   for (let i = 0; i < entity.lessonsDetail.length; i++) {
     let lessonId = entity.lessonsDetail[i].id;
     const lessonProgressRecord = await strapi.services["user-progress"].findOne(

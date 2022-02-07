@@ -25,13 +25,19 @@ module.exports = {
 
     async create(ctx) {
         try {
-            let { courseId } = ctx.request.body;
-            let course = await strapi.services['course'].findOne({ id: courseId });
+            let { lessonId } = ctx.request.body;
+            
+            let lesson = await strapi.services['lesson'].findOne({ id: lessonId });
+            let course = lesson?.course;
+            let courseId = course?.id;
             let priceKey = course.stripePriceKey;
             let price = course.price;
+            const userDetails = await strapi.query('user', 'users-permissions').findOne({
+                id: ctx.state.user.id,
+            });
             if (!priceKey && (!price || price <= 0)) {
                 try {
-                    let { courseId } = ctx.request.body;
+
                     let course = await strapi.services['course'].findOne({ id: courseId });
 
                     let session = ctx.state.user.username + " applied free course " + course.title
@@ -60,7 +66,7 @@ module.exports = {
                     line_items: [
                         { price: priceKey, quantity: 1 },
                     ],
-                    client_reference_id: ctx.state.user.stripeCustomerKey,
+                    client_reference_id: userDetails.stripeCustomerKey,
                     mode: 'payment',
                 });
     
@@ -69,6 +75,10 @@ module.exports = {
                     course,
                     sessionID: session.id,
                 });
+                let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
+                let userCourses = user.courses;
+                userCourses.push({ id: courseId });
+                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
             }
         } catch (e) {
