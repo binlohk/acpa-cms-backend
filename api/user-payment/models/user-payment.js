@@ -23,13 +23,13 @@ module.exports = {
         return [day, month, year].join("-");
       }
 
-      let LessaonDate = courseDetails.enroll_forms[0].LessonDate;
+      let LessaonDate = courseDetails?.enroll_forms[0]?.LessonDate;
       const user = await strapi.query("user", "users-permissions").findOne({
         id: result.user.id,
       });
       const referrerDetails = await strapi
         .query("user", "users-permissions")
-        .findOne({ id: user.user_referrees[0].referral_referrer });
+        .findOne({ id: user?.user_referrees[0]?.referral_referrer });
 
       let userName = result.user.username;
       let LessonDateTime =

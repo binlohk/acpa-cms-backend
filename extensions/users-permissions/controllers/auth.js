@@ -639,6 +639,7 @@ module.exports = {
     try {
       params.confirmed = true;
       const user = await strapi.query('user', 'users-permissions').create(params);
+      
       const sanitizedUser = sanitizeEntity(user, {
         model: strapi.query('user', 'users-permissions').model,
       });
@@ -648,8 +649,10 @@ module.exports = {
       const { referralToken } = ctx.params;
       try {
         if (referralToken) {
+          
           const { user: userService, jwt: jwtService } = strapi.plugins['users-permissions'].services;
           const referrer = await jwtService.verify(referralToken);
+          
           let referrerData = await strapi.plugins['users-permissions'].services.user.fetch({
             email: referrer.email,
           });
@@ -660,6 +663,7 @@ module.exports = {
 
           await strapi.query('user-referral').create(userReferralData);
           let referrerNewPoint = parseInt(process.env.REFERRAL_POINT_EARNED);
+          
           if (parseInt(referrerData.point) > 0) {
             referrerNewPoint = referrerNewPoint + parseInt(referrerData.point);
           }

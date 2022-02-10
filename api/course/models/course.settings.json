@@ -39,6 +39,8 @@
     "lessons": {
       "via": "course",
       "private": true,
+      "via": "course",
+      "private": true,
       "collection": "lesson"
     },
     "featured": {
