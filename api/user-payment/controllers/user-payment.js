@@ -25,20 +25,19 @@ module.exports = {
 
     async create(ctx) {
         try {
-            let { lessonId } = ctx.request.body;
-            
-            let lesson = await strapi.services['lesson'].findOne({ id: lessonId });
-            let course = lesson?.course;
-            let courseId = course?.id;
+
+            let { courseId } = ctx.request.body;
+            let course = await strapi.services['course'].findOne({ id: courseId });
             let priceKey = course.stripePriceKey;
             let price = course.price;
+            
             const userDetails = await strapi.query('user', 'users-permissions').findOne({
                 id: ctx.state.user.id,
             });
+            
             if (!priceKey && (!price || price <= 0)) {
                 try {
 
-                    let course = await strapi.services['course'].findOne({ id: courseId });
 
                     let session = ctx.state.user.username + " applied free course " + course.title
 
