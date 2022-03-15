@@ -43,10 +43,12 @@ module.exports = {
       let userEmail = result.user.email;
       let referrerName = referrerDetails.username;
 
-      let InvitationMessage =
-        courseDetails?.enroll_forms[0]?.InvitationMessage.replace(/<[^>]+>/g, "");
-      if (!InvitationMessage) {
-        InvitationMessage = courseDetails?.description.replace(/<[^>]+>/g, "");
+      if (!courseDetails?.enroll_forms[0]?.InvitationMessage) {
+        var InvitationMessage = courseDetails?.description.replace(/<[^>]+>/g, "");
+      }
+      else {
+        var InvitationMessage =
+        courseDetails?.enroll_forms[0]?.InvitationMessage.replace(/<[^>]+>/g, "");  
       }
       let UserDetailsTable = `
         
@@ -104,10 +106,12 @@ module.exports = {
       </tr>
     </table>`;
       let EnrolledUSerEmail = result.user.email;
-      let InvitationMessageSubject =
-        "已报名课程" + courseDetails?.enroll_forms[0]?.lessonTitle;
+
       if (!courseDetails?.enroll_forms[0]?.lessonTitle) {
-        InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
+        var InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
+      } else {
+        var InvitationMessageSubject =
+        "已报名课程" + courseDetails?.enroll_forms[0]?.lessonTitle;  
       }
       await strapi.plugins["email"].services.email
         .send({
