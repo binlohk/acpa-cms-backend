@@ -11,6 +11,7 @@ module.exports = {
       let courseDetails = await strapi.services["course"].findOne({
         id: result.course.id,
       });
+
       function formatDate(date) {
         var d = new Date(date),
           month = "" + (d.getMonth() + 1),
@@ -32,21 +33,28 @@ module.exports = {
         .findOne({ id: user?.user_referrees[0]?.referral_referrer });
 
       let userName = result.user.username;
-      let LessonDateTime =
+      if (LessaonDate) {
+        var LessonDateTime =
         formatDate(LessaonDate) +
         " " +
         new Date(LessaonDate).getHours() +
         ":" +
-        new Date(LessaonDate).getMinutes();
+        new Date(LessaonDate).getMinutes();  
+      } else {
+        var LessonDateTime = "";
+      }
 
-      let userPhoneNumber = result.user.phone;
-      let userEmail = result.user.email;
-      let referrerName = referrerDetails.username;
+      let userPhoneNumber = result?.user?.phone ?? "";
 
-      let InvitationMessage =
-        courseDetails?.enroll_forms[0]?.InvitationMessage.replace(/<[^>]+>/g, "");
-      if (!InvitationMessage) {
-        InvitationMessage = courseDetails?.description.replace(/<[^>]+>/g, "");
+      let userEmail = result?.user?.email ?? "";
+      let referrerName = referrerDetails?.username ?? "";
+
+      if (!courseDetails?.enroll_forms[0]?.InvitationMessage) {
+        var InvitationMessage = courseDetails?.description.replace(/<[^>]+>/g, "");
+      }
+      else {
+        var InvitationMessage =
+        courseDetails?.enroll_forms[0]?.InvitationMessage.replace(/<[^>]+>/g, "");  
       }
       let UserDetailsTable = `
         
@@ -104,12 +112,15 @@ module.exports = {
       </tr>
     </table>`;
       let EnrolledUSerEmail = result.user.email;
-      let InvitationMessageSubject =
-        "已报名课程" + courseDetails?.enroll_forms[0]?.lessonTitle;
+
       if (!courseDetails?.enroll_forms[0]?.lessonTitle) {
-        InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
+        var InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
+      } else {
+        var InvitationMessageSubject =
+        "已报名课程" + courseDetails?.enroll_forms[0]?.lessonTitle;  
       }
       await strapi.plugins["email"].services.email
+      
         .send({
           to: EnrolledUSerEmail,
           from: "admin@acpa.training",
