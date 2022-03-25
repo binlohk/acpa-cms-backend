@@ -123,8 +123,8 @@ module.exports = {
       
         .send({
           to: EnrolledUSerEmail,
-          from: "admin@acpa.training",
-          replyTo: "admin@acpa.training",
+          from: "kelvin@acpa.training",
+          replyTo: "kelvin@acpa.training",
           subject: InvitationMessageSubject,
           html: UserDetailsTable,
         })
