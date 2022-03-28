@@ -30,7 +30,7 @@ module.exports = {
             let course = await strapi.services['course'].findOne({ id: courseId });
             let priceKey = course.stripePriceKey;
             let price = course.price;
-            
+
             const userDetails = await strapi.query('user', 'users-permissions').findOne({
                 id: ctx.state.user.id,
             });
@@ -68,17 +68,7 @@ module.exports = {
                     client_reference_id: userDetails.stripeCustomerKey,
                     mode: 'payment',
                 });
-    
-                let entity = await strapi.services['user-payment'].create({
-                    user: ctx.state.user,
-                    course,
-                    sessionID: session.id,
-                });
-                let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                let userCourses = user.courses;
-                userCourses.push({ id: courseId });
-                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
-                return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
+                return sanitizeEntity(session, { model: strapi.models['user-payment'] });
             }
         } catch (e) {
             console.log(e);
@@ -147,4 +137,18 @@ module.exports = {
         }
     },
 
+    async userPaymentSuccess(ctx) {
+        const { courseId, sessionId } = ctx.request.body;
+        let course = await strapi.services['course'].findOne({ id: ctx.request.body.courseId });
+          let entity = await strapi.services['user-payment'].create({
+                    user: ctx.state.user,
+                    course,
+                    sessionID: ctx.request.body.sessionId,
+                });
+                let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
+                let userCourses = user.courses;
+                userCourses.push({ id: courseId });
+                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
+                return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
+    }
 };
