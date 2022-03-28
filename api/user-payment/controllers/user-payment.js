@@ -111,7 +111,7 @@ module.exports = {
             return ctx.badRequest(`⚠️  Webhook signature is not passed.`);
         }
 
-        if (eventType === "checkout.session.completed") {
+        if (eventType === "payment_intent.created") {
             console.log(`🔔  Payment received!`);
             let session = data.object;
             try {
