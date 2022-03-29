@@ -30,7 +30,7 @@ module.exports = {
             let course = await strapi.services['course'].findOne({ id: courseId });
             let priceKey = course.stripePriceKey;
             let price = course.price;
-            
+
             const userDetails = await strapi.query('user', 'users-permissions').findOne({
                 id: ctx.state.user.id,
             });
@@ -44,13 +44,9 @@ module.exports = {
                     let entity = await strapi.services['user-payment'].create({
                         user: ctx.state.user,
                         course,
-                        sessionID: session
+                        sessionID: session,
+                        paid:true
                     });
-
-                    let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                    let userCourses = user.courses;
-                    userCourses.push({ id: courseId });
-                    let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                     return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
                 } catch (e) {
                     console.log(e);
@@ -68,16 +64,11 @@ module.exports = {
                     client_reference_id: userDetails.stripeCustomerKey,
                     mode: 'payment',
                 });
-    
                 let entity = await strapi.services['user-payment'].create({
                     user: ctx.state.user,
                     course,
                     sessionID: session.id,
                 });
-                let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                let userCourses = user.courses;
-                userCourses.push({ id: courseId });
-                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
             }
         } catch (e) {
@@ -105,16 +96,13 @@ module.exports = {
                     signature,
                     process.env.ACPA_STRIPE_WEBHOOK_SECRET
                 );
-
             } catch (err) {
-                console.log(err);
                 return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
             }
 
             // Extract the object from the event.
             data = event.data;
             eventType = event.type;
-
         } else {
             // Webhook signing is recommended, but if the secret is not configured in `config.js`,
             // retrieve the event data directly from the request body.
@@ -123,6 +111,7 @@ module.exports = {
 
         if (eventType === "checkout.session.completed") {
             console.log(`🔔  Payment received!`);
+
             let session = data.object;
             try {
                 let entity = await strapi.services['user-payment'].update({
@@ -131,11 +120,6 @@ module.exports = {
                     {
                         paid: true,
                     });
-                let user = await strapi.query('user', 'users-permissions').findOne({ id: entity.user.id });
-                let userCourses = user.courses;
-                userCourses.push({ id: entity.course.id });
-                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: entity.user.id }, { courses: userCourses });
-                console.log(userCoursesUpdate, 'userCoursesUpdate')
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
 
             } catch (e) {
@@ -146,5 +130,4 @@ module.exports = {
             return ctx.badRequest(`⚠️  The payment status is not succeeded.`);
         }
     },
-
 };

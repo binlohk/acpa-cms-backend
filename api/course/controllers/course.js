@@ -129,15 +129,8 @@ const checkIfUserFinishedLesson = async (entity, userId) => {
 };
 
 const checkIfUserPurchasedCourse = async (entity, userId) => {
-  const user = await strapi
-    .query("user", "users-permissions")
-    .findOne({ id: userId });
-  const userCourses = user.courses;
-  const ifUserOwnTargetCourse = userCourses.filter((course) => {
-    return course.id == entity.id;
-  });
-  // console.log(ifUserOwnTargetCourse, 'ifUserOwnTargetCourse')
-  if (ifUserOwnTargetCourse.length > 0) {
+  const userPaymentCourse = await strapi.query("user-payment").findOne({ course: entity.id, user: userId, paid: true });
+  if (userPaymentCourse) {
     entity.purchased = true;
   }
 };

@@ -64,11 +64,6 @@
       "plugin": "users-permissions",
       "configurable": false
     },
-    "courses": {
-      "via": "users",
-      "collection": "course",
-      "dominant": true
-    },
     "point": {
       "type": "integer",
       "default": 0,
