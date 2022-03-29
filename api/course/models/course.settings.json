@@ -26,21 +26,13 @@
       "required": true,
       "default": 0
     },
-    "users": {
-      "private": true,
-      "via": "courses",
-      "plugin": "users-permissions",
-      "collection": "user"
-    },
     "course_materials": {
       "private": true,
       "collection": "course-material"
     },
     "lessons": {
-      "via": "course",
       "private": true,
       "via": "course",
-      "private": true,
       "collection": "lesson"
     },
     "featured": {

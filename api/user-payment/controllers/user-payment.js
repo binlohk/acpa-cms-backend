@@ -44,13 +44,9 @@ module.exports = {
                     let entity = await strapi.services['user-payment'].create({
                         user: ctx.state.user,
                         course,
-                        sessionID: session
+                        sessionID: session,
+                        paid:true
                     });
-
-                    let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                    let userCourses = user.courses;
-                    userCourses.push({ id: courseId });
-                    let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                     return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
                 } catch (e) {
                     console.log(e);
@@ -128,11 +124,6 @@ module.exports = {
                     {
                         paid: true,
                     });
-                let user = await strapi.query('user', 'users-permissions').findOne({ id: entity.user.id });
-                let userCourses = user.courses;
-                userCourses.push({ id: entity.course.id });
-                let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: entity.user.id }, { courses: userCourses });
-                console.log(userCoursesUpdate, 'userCoursesUpdate')
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
 
             } catch (e) {
