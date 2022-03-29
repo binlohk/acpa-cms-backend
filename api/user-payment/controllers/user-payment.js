@@ -69,10 +69,6 @@ module.exports = {
                     course,
                     sessionID: session.id,
                 });
-                // let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-                // let userCourses = user.courses;
-                // userCourses.push({ id: courseId });
-                // let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
                 return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
             }
         } catch (e) {
@@ -134,20 +130,4 @@ module.exports = {
             return ctx.badRequest(`⚠️  The payment status is not succeeded.`);
         }
     },
-
-    async userPaymentSuccess(ctx) {
-        // const { courseId, sessionId } = ctx.request.body;
-        // let course = await strapi.services['course'].findOne({ id: ctx.request.body.courseId });
-        //   let entity = await strapi.services['user-payment'].create({
-        //             user: ctx.state.user,
-        //             course,
-        //             sessionID: ctx.request.body.sessionId,
-        //         });
-        //         let user = await strapi.query('user', 'users-permissions').findOne({ id: ctx.state.user.id });
-        //         let userCourses = user.courses;
-        //         userCourses.push({ id: courseId });
-        //         let userCoursesUpdate = await strapi.query('user', 'users-permissions').update({ id: ctx.state.user.id }, { courses: userCourses });
-        // return sanitizeEntity(entity, { model: strapi.models['user-payment'] });
-        return "";
-    }
 };

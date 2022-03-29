@@ -55,14 +55,6 @@
       "config": {
         "policies": []
       }
-    },
-    {
-      "method": "POST",
-      "path": "/user-payments-success",
-      "handler": "user-payment.userPaymentSuccess",
-      "config": {
-        "policies": []
-      }
     }
   ]
 }
