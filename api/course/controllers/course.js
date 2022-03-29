@@ -129,7 +129,7 @@ const checkIfUserFinishedLesson = async (entity, userId) => {
 };
 
 const checkIfUserPurchasedCourse = async (entity, userId) => {
-  const userPaymentCourse = await strapi.query("user-payment").findOne({ course: entity.id, user: userId , paid:true});
+  const userPaymentCourse = await strapi.query("user-payment").findOne({ course: entity.id, user: userId, paid: true });
   if (userPaymentCourse) {
     entity.purchased = true;
   }
