@@ -11,7 +11,6 @@ module.exports = {
       let courseDetails = await strapi.services["course"].findOne({
         id: result.course.id,
       });
-
       function formatDate(date) {
         var d = new Date(date),
           month = "" + (d.getMonth() + 1),
@@ -28,10 +27,13 @@ module.exports = {
       const user = await strapi.query("user", "users-permissions").findOne({
         id: result.user.id,
       });
-      const referrerDetails = await strapi
-        .query("user", "users-permissions")
-        .findOne({ id: user?.user_referrees[0]?.referral_referrer });
 
+      var referrerDetails = "";
+      if (user?.user_referrees[0]?.referral_referrer) {
+        var referrerDetails = await strapi
+        .query("user", "users-permissions")
+        .findOne({ id: user?.user_referrees[0]?.referral_referrer });  
+      }
       let userName = result.user.username;
       if (LessaonDate) {
         var LessonDateTime =
@@ -45,21 +47,20 @@ module.exports = {
       }
 
       let userPhoneNumber = result?.user?.phone ?? "";
-
+      
       let userEmail = result?.user?.email ?? "";
       let referrerName = referrerDetails?.username ?? "";
-
       if (!courseDetails?.enroll_forms[0]?.InvitationMessage) {
-        var InvitationMessage = courseDetails?.description.replace(/<[^>]+>/g, "");
+        var InvitationMessage = courseDetails?.description.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);
       }
       else {
         var InvitationMessage =
-        courseDetails?.enroll_forms[0]?.InvitationMessage.replace(/<[^>]+>/g, "");  
+        courseDetails?.enroll_forms[0]?.InvitationMessage.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);  
       }
       let UserDetailsTable = `
-        
+      
       ${InvitationMessage}
-
+      
       <table style="font-family: arial, sans-serif;
       border-collapse: collapse;">
       <tr >
@@ -123,8 +124,10 @@ module.exports = {
       
         .send({
           to: EnrolledUSerEmail,
-          from: "kelvin@acpa.training",
-          replyTo: "kelvin@acpa.training",
+          // from: "kelvin@acpa.training",
+          from: "meet.patel@lablambworks.com",
+          // replyTo: "kelvin@acpa.training",
+          replyTo: "meet.patel@lablambworks.com",
           subject: InvitationMessageSubject,
           html: UserDetailsTable,
         })
@@ -132,5 +135,6 @@ module.exports = {
           console.log(err);
         });
     },
+    
   },
 };
