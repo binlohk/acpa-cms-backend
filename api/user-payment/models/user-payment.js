@@ -45,7 +45,6 @@ module.exports = {
       } else {
         var LessonDateTime = "";
       }
-
       let userPhoneNumber = result?.user?.phone ?? "";
       
       let userEmail = result?.user?.email ?? "";
@@ -58,7 +57,6 @@ module.exports = {
         courseDetails?.enroll_forms[0]?.InvitationMessage.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);  
       }
       let UserDetailsTable = `
-      
       ${InvitationMessage}
       
       <table style="font-family: arial, sans-serif;
@@ -78,22 +76,6 @@ module.exports = {
         <td style=" border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;">${userName}</td>
-      </tr>
-      <tr>
-        <td style=" border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;">Lesson date</td>
-        <td style=" border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;">${LessonDateTime}</td>
-      </tr>
-      <tr style="background-color: #dddddd;">
-        <td style=" border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;">WhatsApp</td>
-        <td style=" border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;">${userPhoneNumber}</td>
       </tr>
       <tr>
         <td style=" border: 1px solid #dddddd;
@@ -118,16 +100,14 @@ module.exports = {
         var InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
       } else {
         var InvitationMessageSubject =
-        "已报名课程" + courseDetails?.enroll_forms[0]?.lessonTitle;  
+        "已报名课程 " + courseDetails?.enroll_forms[0]?.lessonTitle;  
       }
       await strapi.plugins["email"].services.email
       
         .send({
           to: EnrolledUSerEmail,
-          // from: "kelvin@acpa.training",
-          from: "meet.patel@lablambworks.com",
-          // replyTo: "kelvin@acpa.training",
-          replyTo: "meet.patel@lablambworks.com",
+          from: "kelvin@acpa.training",
+          replyTo: "kelvin@acpa.training",
           subject: InvitationMessageSubject,
           html: UserDetailsTable,
         })
