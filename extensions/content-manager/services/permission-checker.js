@@ -26,6 +26,10 @@ const createPermissionChecker = ({ userAbility, model }) => {
   };
 
   const sanitizeOutput = (data, { action = ACTIONS.read } = {}) => {
+    if (data?.EnrollFormURL === null || data?.EnrollFormURL === "") {
+      let frontURLForEnrollRorm = 'https://app.acpa.training/publicEnroll/' + data?.id
+      data.EnrollFormURL = frontURLForEnrollRorm;
+    }
     return permissionsManager.sanitize(data, {
       subject: toSubject(data),
       action,
