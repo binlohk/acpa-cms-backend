@@ -43,6 +43,9 @@
     },
     "InvitationMessage": {
       "type": "richtext"
+    },
+    "EnrollFormURL": {
+      "type": "string"
     }
   }
 }
