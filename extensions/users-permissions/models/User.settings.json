@@ -114,9 +114,9 @@
     "phone": {
       "type": "string"
     },
-    "user_session": {
-      "via": "users",
-      "model": "user-sessions"
+    "user_sessions": {
+      "via": "user",
+      "collection": "user-sessions"
     }
   }
 }

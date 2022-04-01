@@ -15,10 +15,10 @@
     "enrolledDate": {
       "type": "datetime"
     },
-    "users": {
-      "via": "user_session",
+    "user": {
       "plugin": "users-permissions",
-      "collection": "user"
+      "model": "user",
+      "via": "user_sessions"
     },
     "session": {
       "model": "session",
