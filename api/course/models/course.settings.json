@@ -59,16 +59,16 @@
       "unique": true,
       "private": false
     },
-    "enroll_forms": {
-      "via": "courses",
-      "collection": "enroll-form"
-    },
     "CoursePromoContent": {
       "type": "richtext"
     },
     "sessions": {
       "via": "course",
       "collection": "session"
+    },
+    "enroll_form": {
+      "via": "course",
+      "model": "enroll-form"
     }
   }
 }
