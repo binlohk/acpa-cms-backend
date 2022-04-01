@@ -65,6 +65,10 @@
     },
     "CoursePromoContent": {
       "type": "richtext"
+    },
+    "sessions": {
+      "via": "course",
+      "collection": "session"
     }
   }
 }
