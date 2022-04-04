@@ -63,6 +63,7 @@ module.exports = {
                     ],
                     client_reference_id: userDetails.stripeCustomerKey,
                     mode: 'payment',
+                    metadata:{'courseSession': ctx.request.body.courseSession ?? "", userId:ctx.state.user.id ?? ""}
                 });
                 let entity = await strapi.services['user-payment'].create({
                     user: ctx.state.user,
@@ -99,7 +100,6 @@ module.exports = {
             } catch (err) {
                 return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
             }
-
             // Extract the object from the event.
             data = event.data;
             eventType = event.type;
@@ -114,6 +114,12 @@ module.exports = {
 
             let session = data.object;
             try {
+                let userSessionData = {
+                    enrolledDate: new Date(),
+                    session: data?.object?.metadata?.courseSession,
+                    user:data?.object?.metadata?.userId
+                  }
+                await strapi.services['user-sessions'].create({...userSessionData});
                 let entity = await strapi.services['user-payment'].update({
                     sessionID: session.id,
                 },
