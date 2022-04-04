@@ -22,8 +22,8 @@ module.exports = {
 
         return [day, month, year].join("-");
       }
-
-      let LessaonDate = courseDetails?.enroll_forms[0]?.LessonDate;
+      console.log("courseDetails", courseDetails);
+      let LessaonDate = courseDetails?.enroll_form?.LessonDate;
       const user = await strapi.query("user", "users-permissions").findOne({
         id: result.user.id,
       });
@@ -49,12 +49,12 @@ module.exports = {
       
       let userEmail = result?.user?.email ?? "";
       let referrerName = referrerDetails?.username ?? "";
-      if (!courseDetails?.enroll_forms[0]?.InvitationMessage) {
+      if (!courseDetails?.enroll_form?.InvitationMessage) {
         var InvitationMessage = courseDetails?.description.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);
       }
       else {
         var InvitationMessage =
-        courseDetails?.enroll_forms[0]?.InvitationMessage.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);  
+        courseDetails?.enroll_form?.InvitationMessage.replace('<img src="/', `<img src=\"${strapi.config.get('server.url')}/`);  
       }
       let UserDetailsTable = `
       ${InvitationMessage}
@@ -96,11 +96,11 @@ module.exports = {
     </table>`;
       let EnrolledUSerEmail = result.user.email;
 
-      if (!courseDetails?.enroll_forms[0]?.lessonTitle) {
+      if (!courseDetails?.enroll_form?.lessonTitle) {
         var InvitationMessageSubject = "已报名课程 " + courseDetails?.title;
       } else {
         var InvitationMessageSubject =
-        "已报名课程 " + courseDetails?.enroll_forms[0]?.lessonTitle;  
+        "已报名课程 " + courseDetails?.enroll_form?.lessonTitle;  
       }
       await strapi.plugins["email"].services.email
       

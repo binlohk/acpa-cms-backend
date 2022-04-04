@@ -24,10 +24,9 @@
     "lessonContent": {
       "type": "richtext"
     },
-    "courses": {
-      "via": "enroll_forms",
-      "collection": "course",
-      "dominant": true
+    "course": {
+      "model": "course",
+      "via": "enroll_form"
     },
     "poster": {
       "model": "file",

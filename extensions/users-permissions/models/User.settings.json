@@ -113,6 +113,10 @@
     },
     "phone": {
       "type": "string"
+    },
+    "user_sessions": {
+      "via": "user",
+      "collection": "user-sessions"
     }
   }
 }

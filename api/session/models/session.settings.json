@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sessions",
+  "info": {
+    "name": "Session",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "course": {
+      "model": "course",
+      "via": "sessions"
+    },
+    "SessionDate": {
+      "type": "datetime"
+    },
+    "Session": {
+      "type": "string"
+    },
+    "user_sessions": {
+      "via": "session",
+      "collection": "user-sessions"
+    }
+  }
+}
