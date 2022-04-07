@@ -108,7 +108,9 @@ module.exports = {
       // Retrieve the event by verifying the signature using the raw body and secret.
       let event;
       let unparsedBody = ctx.request.body[unparsed];
+      console.log("unparsedBody: ", unparsedBody)
       let signature = ctx.request.headers["stripe-signature"];
+      console.log("signature: ", signature)
       try {
         event = stripe.webhooks.constructEvent(
           unparsedBody,
