@@ -1,9 +1,10 @@
-'use strict';
+"use strict";
 
-const { has, prop, pick, concat } = require('lodash/fp');
-const { PUBLISHED_AT_ATTRIBUTE } = require('strapi-utils').contentTypes.constants;
+const { has, prop, pick, concat } = require("lodash/fp");
+const { PUBLISHED_AT_ATTRIBUTE } =
+  require("strapi-utils").contentTypes.constants;
 
-const { getService } = require('../utils');
+const { getService } = require("../utils");
 
 module.exports = {
   async find(ctx) {
@@ -12,24 +13,28 @@ module.exports = {
     const { idsToOmit } = ctx.request.body;
 
     if (!targetField) {
+      console.log("in relation");
       return ctx.badRequest();
     }
 
-    const modelDef = _component ? strapi.db.getModel(_component) : strapi.db.getModel(model);
+    const modelDef = _component
+      ? strapi.db.getModel(_component)
+      : strapi.db.getModel(model);
 
     if (!modelDef) {
-      return ctx.notFound('model.notFound');
+      return ctx.notFound("model.notFound");
     }
 
     const attr = modelDef.attributes[targetField];
     if (!attr) {
-      return ctx.badRequest('targetField.invalid');
+      console.log(`"targetField.invalid"`);
+      return ctx.badRequest("targetField.invalid");
     }
 
     const target = strapi.db.getModelByAssoc(attr);
 
     if (!target) {
-      return ctx.notFound('target.notFound');
+      return ctx.notFound("target.notFound");
     }
 
     if (idsToOmit && Array.isArray(idsToOmit)) {
@@ -37,11 +42,11 @@ module.exports = {
       query._where.id_nin = concat(query._where.id_nin || [], idsToOmit);
     }
 
-    const entityManager = getService('entity-manager');
+    const entityManager = getService("entity-manager");
 
     let entities = [];
 
-    if (has('_q', ctx.request.query)) {
+    if (has("_q", ctx.request.query)) {
       entities = await entityManager.search(query, target.uid);
     } else {
       entities = await entityManager.find(query, target.uid);
@@ -52,11 +57,12 @@ module.exports = {
     }
 
     const modelConfig = _component
-      ? await getService('components').findConfiguration(modelDef)
-      : await getService('content-types').findConfiguration(modelDef);
+      ? await getService("components").findConfiguration(modelDef)
+      : await getService("content-types").findConfiguration(modelDef);
 
-    const field = prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || 'id';
-    const pickFields = [field, 'id', target.primaryKey, PUBLISHED_AT_ATTRIBUTE];
+    const field =
+      prop(`metadatas.${targetField}.edit.mainField`, modelConfig) || "id";
+    const pickFields = [field, "id", target.primaryKey, PUBLISHED_AT_ATTRIBUTE];
 
     ctx.body = entities.map(pick(pickFields));
   },
