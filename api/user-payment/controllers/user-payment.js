@@ -54,6 +54,7 @@ module.exports = {
           console.log(e);
         }
       } else if (!priceKey && price > 0) {
+        console.log("in user-payment ⚠️  No price key available.");
         return ctx.badRequest(`⚠️  No price key available.`);
       } else {
         let session = await stripe.checkout.sessions.create({
@@ -116,6 +117,9 @@ module.exports = {
           process.env.ACPA_STRIPE_WEBHOOK_SECRET
         );
       } catch (err) {
+        console.log(
+          "in user payment, ⚠️  Webhook signature verification failed. "
+        );
         return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
       }
       // Extract the object from the event.
@@ -124,6 +128,7 @@ module.exports = {
     } else {
       // Webhook signing is recommended, but if the secret is not configured in `config.js`,
       // retrieve the event data directly from the request body.
+      console.log("in user-payment,⚠️  Webhook signature is not passed. ");
       return ctx.badRequest(`⚠️  Webhook signature is not passed.`);
     }
 
@@ -148,10 +153,15 @@ module.exports = {
         );
         return sanitizeEntity(entity, { model: strapi.models["user-payment"] });
       } catch (e) {
-        console.log(e);
+        console.log(
+          `in user-payment`,
+          e,
+          "⚠️  Update user payment record failed."
+        );
         return ctx.badRequest(`⚠️  Update user payment record failed.`);
       }
     } else {
+      console.log("in user-payment ⚠️  The payment status is not succeeded.");
       return ctx.badRequest(`⚠️  The payment status is not succeeded.`);
     }
   },

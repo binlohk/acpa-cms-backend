@@ -1,11 +1,15 @@
-'use strict';
+"use strict";
 
-const { has, pipe, prop, pick } = require('lodash/fp');
-const { MANY_RELATIONS } = require('strapi-utils').relations.constants;
-const { setCreatorFields } = require('strapi-utils');
+const { has, pipe, prop, pick } = require("lodash/fp");
+const { MANY_RELATIONS } = require("strapi-utils").relations.constants;
+const { setCreatorFields } = require("strapi-utils");
 
-const { getService, wrapBadRequest, pickWritableAttributes } = require('../utils');
-const { validateBulkDeleteInput, validatePagination } = require('./validation');
+const {
+  getService,
+  wrapBadRequest,
+  pickWritableAttributes,
+} = require("../utils");
+const { validateBulkDeleteInput, validatePagination } = require("./validation");
 
 module.exports = {
   async find(ctx) {
@@ -13,21 +17,31 @@ module.exports = {
     const { model } = ctx.params;
     const { query } = ctx.request;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.read()) {
       return ctx.forbidden();
     }
 
-    const method = has('_q', query) ? 'searchWithRelationCounts' : 'findWithRelationCounts';
+    const method = has("_q", query)
+      ? "searchWithRelationCounts"
+      : "findWithRelationCounts";
 
     const permissionQuery = permissionChecker.buildReadQuery(query);
 
-    const { results, pagination } = await entityManager[method](permissionQuery, model);
+    const { results, pagination } = await entityManager[method](
+      permissionQuery,
+      model
+    );
 
     ctx.body = {
-      results: results.map(entity => permissionChecker.sanitizeOutput(entity)),
+      results: results.map((entity) =>
+        permissionChecker.sanitizeOutput(entity)
+      ),
       pagination,
     };
   },
@@ -36,8 +50,11 @@ module.exports = {
     const { userAbility } = ctx.state;
     const { model, id } = ctx.params;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.read()) {
       return ctx.forbidden();
@@ -61,8 +78,11 @@ module.exports = {
     const { model } = ctx.params;
     const { body } = ctx.request;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.create()) {
       return ctx.forbidden();
@@ -78,7 +98,7 @@ module.exports = {
       const entity = await entityManager.create(sanitizeFn(body), model);
       ctx.body = permissionChecker.sanitizeOutput(entity);
 
-      await strapi.telemetry.send('didCreateFirstContentTypeEntry', { model });
+      await strapi.telemetry.send("didCreateFirstContentTypeEntry", { model });
     })();
   },
 
@@ -87,8 +107,11 @@ module.exports = {
     const { id, model } = ctx.params;
     const { body } = ctx.request;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.update()) {
       return ctx.forbidden();
@@ -111,7 +134,11 @@ module.exports = {
     const sanitizeFn = pipe([pickWritables, pickPermittedFields, setCreator]);
 
     await wrapBadRequest(async () => {
-      const updatedEntity = await entityManager.update(entity, sanitizeFn(body), model);
+      const updatedEntity = await entityManager.update(
+        entity,
+        sanitizeFn(body),
+        model
+      );
 
       ctx.body = permissionChecker.sanitizeOutput(updatedEntity);
     })();
@@ -121,8 +148,11 @@ module.exports = {
     const { userAbility } = ctx.state;
     const { id, model } = ctx.params;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.delete()) {
       return ctx.forbidden();
@@ -147,8 +177,11 @@ module.exports = {
     const { userAbility } = ctx.state;
     const { id, model } = ctx.params;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.publish()) {
       return ctx.forbidden();
@@ -173,8 +206,11 @@ module.exports = {
     const { userAbility } = ctx.state;
     const { id, model } = ctx.params;
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.unpublish()) {
       return ctx.forbidden();
@@ -203,8 +239,11 @@ module.exports = {
 
     await validateBulkDeleteInput(body);
 
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.delete()) {
       return ctx.forbidden();
@@ -220,7 +259,9 @@ module.exports = {
 
     const results = await entityManager.findAndDelete(params, model);
 
-    ctx.body = results.map(result => permissionChecker.sanitizeOutput(result));
+    ctx.body = results.map((result) =>
+      permissionChecker.sanitizeOutput(result)
+    );
   },
 
   async previewManyRelations(ctx) {
@@ -230,19 +271,23 @@ module.exports = {
 
     validatePagination({ page, pageSize });
 
-    const contentTypeService = getService('content-types');
-    const entityManager = getService('entity-manager');
-    const permissionChecker = getService('permission-checker').create({ userAbility, model });
+    const contentTypeService = getService("content-types");
+    const entityManager = getService("entity-manager");
+    const permissionChecker = getService("permission-checker").create({
+      userAbility,
+      model,
+    });
 
     if (permissionChecker.cannot.read()) {
       return ctx.forbidden();
     }
 
     const modelDef = strapi.getModel(model);
-    const assoc = modelDef.associations.find(a => a.alias === targetField);
+    const assoc = modelDef.associations.find((a) => a.alias === targetField);
 
     if (!assoc || !MANY_RELATIONS.includes(assoc.nature)) {
-      return ctx.badRequest('Invalid target field');
+      console.log("Invalid target field");
+      return ctx.badRequest("Invalid target field");
     }
 
     const entity = await entityManager.findOneWithCreatorRoles(id, model);
@@ -256,9 +301,11 @@ module.exports = {
     }
 
     let relationList;
-    if (assoc.nature === 'manyWay') {
-      const populatedEntity = await entityManager.findOne(id, model, [targetField]);
-      const relationsListIds = populatedEntity[targetField].map(prop('id'));
+    if (assoc.nature === "manyWay") {
+      const populatedEntity = await entityManager.findOne(id, model, [
+        targetField,
+      ]);
+      const relationsListIds = populatedEntity[targetField].map(prop("id"));
       relationList = await entityManager.findPage(
         { page, pageSize, id_in: relationsListIds },
         assoc.targetUid
@@ -266,17 +313,26 @@ module.exports = {
     } else {
       const assocModel = strapi.db.getModelByAssoc(assoc);
       relationList = await entityManager.findPage(
-        { page, pageSize, [`${assoc.via}.${assocModel.primaryKey}`]: entity.id },
+        {
+          page,
+          pageSize,
+          [`${assoc.via}.${assocModel.primaryKey}`]: entity.id,
+        },
         assoc.targetUid
       );
     }
 
     const config = await contentTypeService.findConfiguration({ uid: model });
-    const mainField = prop(['metadatas', assoc.alias, 'edit', 'mainField'], config);
+    const mainField = prop(
+      ["metadatas", assoc.alias, "edit", "mainField"],
+      config
+    );
 
     ctx.body = {
       pagination: relationList.pagination,
-      results: relationList.results.map(pick(['id', modelDef.primaryKey, mainField])),
+      results: relationList.results.map(
+        pick(["id", modelDef.primaryKey, mainField])
+      ),
     };
   },
 };
