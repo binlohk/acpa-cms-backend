@@ -26,6 +26,7 @@ module.exports = {
     try {
       let { courseId } = ctx.request.body;
       let course = await strapi.services["course"].findOne({ id: courseId });
+
       let priceKey = course.stripePriceKey;
       let price = course.price;
 
@@ -67,12 +68,26 @@ module.exports = {
             userId: ctx.state.user.id ?? "",
           },
         });
-        let entity = await strapi.services["user-payment"].create({
-          user: ctx.state.user,
-          course,
-          sessionID: session.id,
+
+        let checkUserPaymentExist = await strapi.services[
+          "user-payment"
+        ].findOne({
+          course: course.id,
+          user: ctx.state.user.id,
+          paid: false,
         });
-        return sanitizeEntity(entity, { model: strapi.models["user-payment"] });
+
+        if (!checkUserPaymentExist) {
+          // there is no user-payment record
+          var entity = await strapi.services["user-payment"].create({
+            user: ctx.state.user,
+            course,
+            sessionID: session.id,
+          });
+        }
+        return sanitizeEntity(entity ?? checkUserPaymentExist, {
+          model: strapi.models["user-payment"],
+        });
       }
     } catch (e) {
       console.log(e);
