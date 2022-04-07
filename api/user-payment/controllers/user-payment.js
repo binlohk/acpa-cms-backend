@@ -103,6 +103,7 @@ module.exports = {
     let data;
     let eventType;
     // Check if webhook signing is configured.
+    console.log("in handleAsyncEvents");
     if (process.env.ACPA_STRIPE_WEBHOOK_SECRET) {
       // Retrieve the event by verifying the signature using the raw body and secret.
       let event;
