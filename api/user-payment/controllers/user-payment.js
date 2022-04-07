@@ -116,6 +116,7 @@ module.exports = {
           process.env.ACPA_STRIPE_WEBHOOK_SECRET
         );
       } catch (err) {
+        console.log(err)
         return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
       }
       // Extract the object from the event.
