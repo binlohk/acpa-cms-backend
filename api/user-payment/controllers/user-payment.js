@@ -114,9 +114,9 @@ module.exports = {
       // Retrieve the event by verifying the signature using the raw body and secret.
       let event;
       let unparsedBody = ctx.request.body[unparsed];
-      console.log("unparsedBody: ", unparsedBody)
+      console.log("unparsedBody: ", unparsedBody);
       let signature = ctx.request.headers["stripe-signature"];
-      console.log("signature: ", signature)
+      console.log("signature: ", signature);
       try {
         event = stripe.webhooks.constructEvent(
           unparsedBody,
@@ -124,7 +124,7 @@ module.exports = {
           process.env.ACPA_STRIPE_WEBHOOK_SECRET
         );
       } catch (err) {
-        console.log(err)
+        console.log(err);
         return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
       }
       // Extract the object from the event.
@@ -141,12 +141,6 @@ module.exports = {
 
       let session = data.object;
       try {
-        let userSessionData = {
-          enrolledDate: new Date(),
-          session: data?.object?.metadata?.courseSession,
-          user: data?.object?.metadata?.userId,
-        };
-        await strapi.services["user-sessions"].create({ ...userSessionData });
         let entity = await strapi.services["user-payment"].update(
           {
             sessionID: session.id,
@@ -155,6 +149,17 @@ module.exports = {
             paid: true,
           }
         );
+        if (
+          data?.object?.metadata?.courseSession &&
+          data?.object?.metadata?.userId
+        ) {
+          let userSessionData = {
+            enrolledDate: new Date(),
+            session: data?.object?.metadata?.courseSession,
+            user: data?.object?.metadata?.userId,
+          };
+          await strapi.services["user-sessions"].create({ ...userSessionData });
+        }
         return sanitizeEntity(entity, { model: strapi.models["user-payment"] });
       } catch (e) {
         console.log(e);
