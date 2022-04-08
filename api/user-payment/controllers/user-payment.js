@@ -84,6 +84,12 @@ module.exports = {
             course,
             sessionID: session.id,
           });
+        } else {
+          await strapi.services["user-payment"].update(
+            { sessionID: checkUserPaymentExist?.sessionID },
+            { sessionID: session?.id }
+          );
+          checkUserPaymentExist.sessionID = session?.id;
         }
         return sanitizeEntity(entity ?? checkUserPaymentExist, {
           model: strapi.models["user-payment"],
