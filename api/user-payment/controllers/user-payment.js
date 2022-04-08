@@ -109,11 +109,14 @@ module.exports = {
     let data;
     let eventType;
     // Check if webhook signing is configured.
+    console.log("in handleAsyncEvents");
     if (process.env.ACPA_STRIPE_WEBHOOK_SECRET) {
       // Retrieve the event by verifying the signature using the raw body and secret.
       let event;
       let unparsedBody = ctx.request.body[unparsed];
+      console.log("unparsedBody: ", unparsedBody)
       let signature = ctx.request.headers["stripe-signature"];
+      console.log("signature: ", signature)
       try {
         event = stripe.webhooks.constructEvent(
           unparsedBody,
@@ -121,6 +124,7 @@ module.exports = {
           process.env.ACPA_STRIPE_WEBHOOK_SECRET
         );
       } catch (err) {
+        console.log(err)
         return ctx.badRequest(`⚠️  Webhook signature verification failed.`);
       }
       // Extract the object from the event.
