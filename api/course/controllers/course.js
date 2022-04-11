@@ -27,67 +27,62 @@ const grabVideoId = (videoUrl) => {
   }
 };
 
-const grabDuration = async (videoUrl) => {
-  const videoId = grabVideoId(videoUrl);
-  try {
-    if (videoId) {
-      return await axios.get(`http://vimeo.com/api/v2/video/${videoId}/json`);
-    }
-  } catch (error) {
-    console.log("ERROR in grabDuration");
-    console.log(error);
-  }
-};
-
 const customizeEntityValue = async (entity) => {
   try {
     const entityWithoutPrivateField = sanitizeEntity(entity, {
       model: strapi.models.course,
     });
-    const unresolvedArray = entity.lessons.map((lesson) => {
-      return grabDuration(lesson.videoUrl);
-    });
     // 2nd parameter, pass a function to Promise.all to resolve the data
     let lessonVideos;
     let lessonsDetail = [];
-    await Promise.all(unresolvedArray)
-      .then((values) => {
-        lessonVideos = values.map((value) => {
-          /**format the time */
-          if (value) {
-            let duration = value.data[0].duration;
-            let seconds;
-            let mins;
-            let time;
-            mins = Math.floor(duration / 60).toLocaleString("en-US", {
-              minimumIntegerDigits: 2,
-              useGrouping: false,
-            });
-            seconds = (duration - mins * 60).toLocaleString("en-US", {
-              minimumIntegerDigits: 2,
-              useGrouping: false,
-            });
-            time = `${mins}:${seconds}`;
-            return {
-              id: value.data[0].id,
-              duration: time,
-            };
-          }
-        });
-
-        const lookupDuration = (lesson) => {
-          let videoDuration;
-          let lookupId = grabVideoId(lesson.videoUrl);
-          if (lessonVideos[0] && lookupId) {
-            videoDuration = lessonVideos
-              .filter((lessonVideo) => lessonVideo.id == lookupId)
-              .map((lessonVideo) => lessonVideo.duration);
-            return videoDuration[0];
-          } else {
+    await Promise.all(
+      entity.lessons.map((lesson) =>
+        axios
+          .get(
+            `http://vimeo.com/api/v2/video/${grabVideoId(lesson.videoUrl)}/json`
+          )
+          .catch(() => {
             return null;
-          }
-        };
-        for (const lesson of entity.lessons) {
+          })
+      )
+    ).then(function (...values) {
+      lessonVideos = values[0].map((value, index) => {
+        /**format the time */
+        if (value?.data[0]) {
+          let duration = value?.data[0]?.duration;
+          let seconds;
+          let mins;
+          let time;
+          mins = Math.floor(duration / 60).toLocaleString("en-US", {
+            minimumIntegerDigits: 2,
+            useGrouping: false,
+          });
+          seconds = (duration - mins * 60).toLocaleString("en-US", {
+            minimumIntegerDigits: 2,
+            useGrouping: false,
+          });
+          time = `${mins}:${seconds}`;
+          return {
+            id: value?.data[0]?.id,
+            duration: time,
+          };
+        }
+      });
+
+      const lookupDuration = (lesson) => {
+        let videoDuration;
+        let lookupId = grabVideoId(lesson.videoUrl);
+        if (lessonVideos[0] && lookupId) {
+          videoDuration = lessonVideos
+            .filter((lessonVideo) => lessonVideo?.id == lookupId)
+            .map((lessonVideo) => lessonVideo.duration);
+          return videoDuration[0];
+        } else {
+          return null;
+        }
+      };
+      for (const lesson of entity.lessons) {
+        if (lookupDuration(lesson)) {
           lessonsDetail.push({
             id: lesson.id,
             title: lesson.title,
@@ -97,12 +92,8 @@ const customizeEntityValue = async (entity) => {
             LessonDate: lesson.LessonDate,
           });
         }
-      })
-      .catch((error) => {
-        console.log("Error in Promise.all");
-        console.log(error);
-        return null;
-      });
+      }
+    });
 
     return {
       lessonsDetail,
@@ -129,7 +120,9 @@ const checkIfUserFinishedLesson = async (entity, userId) => {
 };
 
 const checkIfUserPurchasedCourse = async (entity, userId) => {
-  const userPaymentCourse = await strapi.query("user-payment").findOne({ course: entity.id, user: userId, paid: true });
+  const userPaymentCourse = await strapi
+    .query("user-payment")
+    .findOne({ course: entity.id, user: userId, paid: true });
   if (userPaymentCourse) {
     entity.purchased = true;
   }
