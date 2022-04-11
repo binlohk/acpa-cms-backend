@@ -108,14 +108,11 @@ const customizeEntityValue = async (entity) => {
 };
 
 const checkIfUserFinishedLesson = async (entity, userId) => {
-  console.log(`checkIfUserFinishedLesson entity-->`, entity);
-  console.log(` checkIfUserFinishedLesson userId-->`, userId);
   for (let i = 0; i < entity.lessonsDetail.length; i++) {
     let lessonId = entity.lessonsDetail[i].id;
     const lessonProgressRecord = await strapi.services["user-progress"].findOne(
       { lesson: lessonId, users_permissions_user: userId }
     );
-    console.log(`lessonProgressRecord -->`, lessonProgressRecord);
     if (lessonProgressRecord) {
       entity.lessonsDetail[i].finished = true;
     }
@@ -123,12 +120,9 @@ const checkIfUserFinishedLesson = async (entity, userId) => {
 };
 
 const checkIfUserPurchasedCourse = async (entity, userId) => {
-  console.log(`in checkIfUserPurchasedCourse`, entity);
-  console.log(`in checkIfUserPurchasedCourse`, userId);
   const userPaymentCourse = await strapi
     .query("user-payment")
     .findOne({ course: entity.id, user: userId, paid: true });
-  console.log(`userPaymentCourse`, userPaymentCourse);
   if (userPaymentCourse) {
     entity.purchased = true;
   }
@@ -156,9 +150,7 @@ module.exports = {
   async findOne(ctx) {
     const { id } = ctx.params;
     const entity = await strapi.services.course.findOne({ id });
-    console.log(`entity-->`, entity);
     const customizedEntity = await customizeEntityValue(entity);
-    console.log(`customizedEntity `, customizedEntity);
     if (ctx.state.user) {
       await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
       await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
