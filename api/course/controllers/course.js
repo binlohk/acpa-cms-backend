@@ -10,7 +10,7 @@ const getVideoDuration = (videoLink) => {
     return axios.get(
       `https://vimeo.com/api/oembed.json?url=${videoLink}`
     );
-//         const durationInMin = await getTimeInMin(videoDetails?.data?.duration);
+//         const durationInMin = await ;
 //     return durationInMin;
 
   } catch (error) {
@@ -47,7 +47,7 @@ const customizeEntityValue = async (entity) => {
     let lessonsDetail = [];
     for (const lesson of entity.lessons) {
       try {
-        const videoDuration = durations.find(duration => duration.lessonId === lesson.id);
+        const videoDuration = getTimeInMin(durations.find(duration => duration.lessonId === lesson.id)?.data?.duration)
         if (videoDuration) {
           lessonsDetail.push({
             id: lesson?.id,
