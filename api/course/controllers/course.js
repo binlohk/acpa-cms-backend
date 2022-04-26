@@ -5,13 +5,14 @@ const axios = require("axios");
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
-const getVideoDuration = async (videoLink) => {
+const getVideoDuration = (videoLink) => {
   try {
-    const videoDetails = await axios.get(
+    return axios.get(
       `https://vimeo.com/api/oembed.json?url=${videoLink}`
     );
-    const durationInMin = await getTimeInMin(videoDetails?.data?.duration);
-    return durationInMin;
+//         const durationInMin = await getTimeInMin(videoDetails?.data?.duration);
+//     return durationInMin;
+
   } catch (error) {
     console.log(`error in get video duration`, error);
     return null;
@@ -37,10 +38,16 @@ const customizeEntityValue = async (entity) => {
     const entityWithoutPrivateField = sanitizeEntity(entity, {
       model: strapi.models.course,
     });
+    let durations = Promise.all(entity.lessons.map((lesson) => {
+      return {
+        lessonId: lesson.id
+        duration: grabDuration(lesson.videoUrl)
+      }
+    }));
     let lessonsDetail = [];
     for (const lesson of entity.lessons) {
       try {
-        const videoDuration = await getVideoDuration(lesson?.videoUrl);
+        const videoDuration = durations.find(duration => duration.lessonId === lesson.id);
         if (videoDuration) {
           lessonsDetail.push({
             id: lesson?.id,
