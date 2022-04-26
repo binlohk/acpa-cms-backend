@@ -1,100 +1,61 @@
 "use strict";
 const { sanitizeEntity } = require("strapi-utils");
 const axios = require("axios");
-
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
-const grabVideoId = (videoUrl) => {
+const getVideoDuration = async (videoLink) => {
   try {
-    let regex =
-      /(?:http:|https:|)\/\/(?:player.|www.)?vimeo\.com\/(?:video\/|embed\/|watch\?\S*v=|v\/)?(\d*)/g;
-    videoUrl = videoUrl.match(regex); // creates array from matches
-    if (videoUrl === null) {
-      // Invalid URL Passed
-      return null;
-    } else {
-      // Valid URL Passed
-      let PassedVimeoURL = videoUrl[0];
-      let regexToGetToken = /\d+/g;
-      let videoToken = PassedVimeoURL.match(regexToGetToken);
-      return videoToken[0].replace(`https://player.vimeo.com/video/`, "");
-    }
+    const videoDetails = await axios.get(
+      `https://vimeo.com/api/oembed.json?url=${videoLink}`
+    );
+    const durationInMin = await getTimeInMin(videoDetails?.data?.duration);
+    return durationInMin;
   } catch (error) {
-    console.log("ERROR IN Function grabVideoId");
-    console.log(error);
+    console.log(`error in get video duration`, error);
+    return null;
   }
 };
-
+const getTimeInMin = async (duration) => {
+  let seconds;
+  let mins;
+  let time;
+  mins = Math.floor(duration / 60).toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+  seconds = (duration - mins * 60).toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+  time = `${mins}:${seconds}`;
+  return time;
+};
 const customizeEntityValue = async (entity) => {
   try {
     const entityWithoutPrivateField = sanitizeEntity(entity, {
       model: strapi.models.course,
     });
-    // 2nd parameter, pass a function to Promise.all to resolve the data
-    let lessonVideos;
     let lessonsDetail = [];
-    await Promise.all(
-      entity.lessons.map((lesson) =>
-        axios
-          .get(
-            `http://vimeo.com/api/v2/video/${grabVideoId(lesson.videoUrl)}/json`
-          )
-          .catch(() => {
-            return null;
-          })
-      )
-    ).then(function (...values) {
-      lessonVideos = values[0].map((value, index) => {
-        /**format the time */
-        if (value?.data[0]) {
-          let duration = value?.data[0]?.duration;
-          let seconds;
-          let mins;
-          let time;
-          mins = Math.floor(duration / 60).toLocaleString("en-US", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          });
-          seconds = (duration - mins * 60).toLocaleString("en-US", {
-            minimumIntegerDigits: 2,
-            useGrouping: false,
-          });
-          time = `${mins}:${seconds}`;
-          return {
-            id: value?.data[0]?.id,
-            duration: time,
-          };
-        }
-      });
-
-      const lookupDuration = (lesson) => {
-        let videoDuration;
-        let lookupId = grabVideoId(lesson.videoUrl);
-        if (lessonVideos[0] && lookupId) {
-          videoDuration = lessonVideos
-            .filter((lessonVideo) => lessonVideo?.id == lookupId)
-            .map((lessonVideo) => lessonVideo.duration);
-          return videoDuration[0];
-        } else {
-          return null;
-        }
-      };
-      for (const lesson of entity.lessons) {
-        if (lookupDuration(lesson)) {
+    for (const lesson of entity.lessons) {
+      try {
+        const videoDuration = await getVideoDuration(lesson?.videoUrl);
+        if (videoDuration) {
           lessonsDetail.push({
-            id: lesson.id,
-            title: lesson.title,
-            text: lesson.lessonDescription,
+            id: lesson?.id,
+            title: lesson?.title,
+            text: lesson?.lessonDescription,
             finished: false,
-            videoDuration: lookupDuration(lesson),
-            LessonDate: lesson.LessonDate,
+            videoDuration: videoDuration,
+            LessonDate: lesson?.LessonDate,
           });
         }
+      } catch (error) {
+        console.log(`error`, error);
       }
-    });
-
+    }
+    console.log(`lessonsDetail`, lessonsDetail);
     return {
       lessonsDetail,
       courseMaterials: entity.course_materials,
@@ -106,7 +67,6 @@ const customizeEntityValue = async (entity) => {
     console.log(error);
   }
 };
-
 const checkIfUserFinishedLesson = async (entity, userId) => {
   for (let i = 0; i < entity.lessonsDetail.length; i++) {
     let lessonId = entity.lessonsDetail[i].id;
@@ -118,7 +78,6 @@ const checkIfUserFinishedLesson = async (entity, userId) => {
     }
   }
 };
-
 const checkIfUserPurchasedCourse = async (entity, userId) => {
   const userPaymentCourse = await strapi
     .query("user-payment")
@@ -127,7 +86,6 @@ const checkIfUserPurchasedCourse = async (entity, userId) => {
     entity.purchased = true;
   }
 };
-
 module.exports = {
   async find(ctx) {
     let entities = await strapi.services.course.find(ctx.query);
@@ -155,7 +113,6 @@ module.exports = {
       await checkIfUserFinishedLesson(customizedEntity, ctx.state.user.id);
       await checkIfUserPurchasedCourse(customizedEntity, ctx.state.user.id);
     }
-
     // console.log(customizedEntity, 'customizedEntity')
     return customizedEntity;
   },
