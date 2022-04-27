@@ -15,7 +15,7 @@ const getVideoDuration = (videoLink) => {
     return null;
   }
 };
-const getTimeInMin = async (duration) => {
+const getTimeInMin = (duration) => {
   let seconds;
   let mins;
   let time;
