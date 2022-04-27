@@ -35,31 +35,18 @@ const customizeEntityValue = async (entity) => {
     const entityWithoutPrivateField = sanitizeEntity(entity, {
       model: strapi.models.course,
     });
-    let durations = Promise.all(entity.lessons.map((lesson) => {
-      return {
-        lessonId: lesson.id,
-        duration: grabDuration(lesson.videoUrl)
-      }
-    }));
-    let lessonsDetail = [];
-    for (const lesson of entity.lessons) {
-      try {
-        const videoDuration = getTimeInMin(durations.find(duration => duration.lessonId === lesson.id)?.data?.duration)
-        if (videoDuration) {
-          lessonsDetail.push({
+    let durations = Promise.all(entity.lessons.map((lesson) => getVideoDuration(lesson.videoUrl)));
+    let lessonsDetail = entity.lessons.map((lesson, index) => {
+      const videoDuration = getTimeInMin(durations[index]);
+        return {
             id: lesson?.id,
             title: lesson?.title,
             text: lesson?.lessonDescription,
             finished: false,
             videoDuration: videoDuration,
-            LessonDate: lesson?.LessonDate,
-          });
+            LessonDate: lesson?.LessonDate
         }
-      } catch (error) {
-        console.log(`error`, error);
-      }
-    }
-    console.log(`lessonsDetail`, lessonsDetail);
+    });
     return {
       lessonsDetail,
       courseMaterials: entity.course_materials,
