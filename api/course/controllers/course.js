@@ -10,9 +10,6 @@ const getVideoDuration = (videoLink) => {
     return axios.get(
       `https://vimeo.com/api/oembed.json?url=${videoLink}`
     );
-//         const durationInMin = await ;
-//     return durationInMin;
-
   } catch (error) {
     console.log(`error in get video duration`, error);
     return null;
@@ -40,7 +37,7 @@ const customizeEntityValue = async (entity) => {
     });
     let durations = Promise.all(entity.lessons.map((lesson) => {
       return {
-        lessonId: lesson.id
+        lessonId: lesson.id,
         duration: grabDuration(lesson.videoUrl)
       }
     }));
