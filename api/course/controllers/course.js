@@ -37,15 +37,15 @@ const customizeEntityValue = async (entity) => {
     });
     let durations = Promise.all(entity.lessons.map((lesson) => getVideoDuration(lesson.videoUrl)));
     let lessonsDetail = entity.lessons.map((lesson, index) => {
-      const videoDuration = getTimeInMin(durations[index].data.duration);
-        return {
+      const videoDuration = getTimeInMin(durations[index]?.data?.duration ?? 0);
+      return {
             id: lesson?.id,
             title: lesson?.title,
             text: lesson?.lessonDescription,
             finished: false,
             videoDuration: videoDuration,
             LessonDate: lesson?.LessonDate
-        }
+      }
     });
     console.log("lessonsDetail: ", lessonsDetail);
     return {
