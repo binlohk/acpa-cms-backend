@@ -35,7 +35,7 @@ const customizeEntityValue = async (entity) => {
     const entityWithoutPrivateField = sanitizeEntity(entity, {
       model: strapi.models.course,
     });
-    let durations = await Promise.all(entity.lessons.map((lesson) => getVideoDuration(lesson.videoUrl)));
+    let durations = await Promise.allSettled(entity.lessons.map((lesson) => getVideoDuration(lesson.videoUrl)));
     let lessonsDetail = entity.lessons.map((lesson, index) => {
       const videoDuration = getTimeInMin(durations[index]?.data?.duration ?? 0);
       return {
