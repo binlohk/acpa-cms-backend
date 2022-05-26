@@ -1,4 +1,4 @@
 server {
   server_name app.acpa.training;
-  return 301 http://app.acpatraining.com$request_uri? permanent;
+  return 301 http://app.acpatraining.com$request_uri;
 }
