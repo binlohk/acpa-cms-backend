@@ -1,8 +1,4 @@
 server {
   server_name app.acpa.training;
-  return 301 https://app.acpatraining.com$request_uri? permanent;
-  listen 80;
-  listen [::]:80;
-  listen 443 ssl;
-  listen [::]:443 ssl ipv6only=on;
+  return 301 http://app.acpatraining.com$request_uri? permanent;
 }
